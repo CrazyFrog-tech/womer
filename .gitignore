@@ -1,0 +1,69 @@
+# .NET / Visual Studio / MAUI
+
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE
+.vs/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tooling
+/.localhistory/
+/.history/
+
+# NuGet
+*.nupkg
+# Package restore
+packages/
+# Symbol cache
+*.snupkg
+
+# Maui generated
+**/Platforms/*/bin/
+**/Platforms/*/obj/
+**/Resources/Raw/*
+
+# Debugger temp (VS)
+**/.vsdbgsrc/
+
+# Publish
+publish/
+
+# Rider
+*.sln.iml
+
+# Node (if used in tooling)
+node_modules/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Generated artifacts
+*.g.cs
+*.g.i.cs
+*.sg.cs
+obj/**/App.g.i.cs
+
+# Local secrets
+appsettings.*.local.json
+secrets.json

@@ -4,27 +4,16 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
-    xmlns:pages="clr-namespace:womer.Pages"
+    xmlns:pages="clr-namespace:womer"
     Shell.FlyoutBehavior="Flyout"
     Title="womer">
 
+
     <ShellContent
-        Title="Dashboard"
+        Title="Workout Timer"
         Icon="{StaticResource IconDashboard}"
-        ContentTemplate="{DataTemplate pages:MainPage}"
-        Route="main" />
-
-    <ShellContent
-        Title="Projects"
-        Icon="{StaticResource IconProjects}"
-        ContentTemplate="{DataTemplate pages:ProjectListPage}"
-        Route="projects" />
-
-    <ShellContent
-        Title="Manage Meta"
-        Icon="{StaticResource IconMeta}"
-        ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-        Route="manage" />
+        ContentTemplate="{DataTemplate pages:WorkoutTimer}"
+        Route="workout" />
 
     <Shell.FlyoutFooter>
         <Grid Padding="15">
