@@ -1,4 +1,4 @@
-# .NET / Visual Studio / MAUI
+# .NET MAUI / Visual Studio / Rider / VS Code
 
 # Build outputs
 bin/
@@ -6,64 +6,71 @@ obj/
 **/bin/
 **/obj/
 
-# User-specific files
-*.user
-*.rsuser
-*.suo
-*.userosscache
-*.sln.docstates
-
-# IDE
-.vs/
-.idea/
-*.code-workspace
-
-# Logs
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Tooling
-/.localhistory/
-/.history/
-
-# NuGet
-*.nupkg
-# Package restore
-packages/
-# Symbol cache
-*.snupkg
-
-# Maui generated
+# MAUI platform-specific build outputs
 **/Platforms/*/bin/
 **/Platforms/*/obj/
-**/Resources/Raw/*
 
-# Debugger temp (VS)
-**/.vsdbgsrc/
-
-# Publish
-publish/
-
-# Rider
-*.sln.iml
-
-# Node (if used in tooling)
-node_modules/
-
-# Coverage
-coverage/
-*.coverage
-*.coveragexml
-
-# Generated artifacts
+# MAUI generated/intermediate XAML and source
 *.g.cs
 *.g.i.cs
 *.sg.cs
 obj/**/App.g.i.cs
 
-# Local secrets
+# Resources (generated or platform-packed intermediates)
+**/Resources/**/*.generated.*
+**/Resources/**/Raw/*
+
+# Solution and IDE caches
+.vs/
+.idea/
+.vscode/
+*.sln.docstates
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Debugger temp (Visual Studio)
+**/.vsdbgsrc/
+
+# NuGet
+*.nupkg
+*.snupkg
+# Legacy packages folder (if used)
+packages/
+
+# Publish / distribution
+publish/
+artifacts/
+
+# Test coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Tooling caches
+/.localhistory/
+/.history/
+
+# Node tooling (if present)
+node_modules/
+
+# Rider
+*.sln.iml
+
+# Local config/secrets (adjust per project)
 appsettings.*.local.json
 secrets.json
+
+# Android specific (uncomment if you create local keystores)
+# *.keystore
+# *.jks
