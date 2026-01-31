@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("womer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+667f4f50b6d4218ed2c2d78af3d6012218ea7d80")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+6032557c4ebef238856db88362ceb0a1cf0a7a3e")]
 [assembly: System.Reflection.AssemblyProductAttribute("womer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("womer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

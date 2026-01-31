@@ -1,48 +1,51 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Data\\zsharp\\womer\\",
+  "WorkspaceRootPath": "C:\\Data\\Projects\\womer\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\workouttimer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\workouttimer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:workouttimer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\workouttimer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\workouttimer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:workouttimer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Data\\zsharp\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\allan\\.nuget\\packages\\microsoft.maui.resizetizer\\10.0.1\\buildTransitive\\Microsoft.Maui.Resizetizer.After.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\allana\\AppData\\Local\\Temp\\.vsdbgsrc\\3877ed4880323306f632a3d9d0a07a625a79b613\\AppShell.xaml.sg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Data\\Projects\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\pages\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\pages\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:pages\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\pages\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\pages\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:pages\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\zsharp\\womer\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|c:\\data\\projects\\womer\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{430B8C98-8761-BA38-3833-9BCD1FD4866D}|womer.csproj|solutionrelative:appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -53,7 +56,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,15 +65,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "App.g.i.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
-              "RelativeDocumentMoniker": "obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
-              "RelativeToolTip": "obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAhwEsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T15:56:22.184Z",
-              "EditorCaption": ""
+              "Title": "Microsoft.Maui.Resizetizer.After.targets",
+              "DocumentMoniker": "C:\\Users\\allan\\.nuget\\packages\\microsoft.maui.resizetizer\\10.0.1\\buildTransitive\\Microsoft.Maui.Resizetizer.After.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\Users\\allan\\.nuget\\packages\\microsoft.maui.resizetizer\\10.0.1\\buildTransitive\\Microsoft.Maui.Resizetizer.After.targets",
+              "ToolTip": "C:\\Users\\allan\\.nuget\\packages\\microsoft.maui.resizetizer\\10.0.1\\buildTransitive\\Microsoft.Maui.Resizetizer.After.targets",
+              "RelativeToolTip": "..\\..\\..\\Users\\allan\\.nuget\\packages\\microsoft.maui.resizetizer\\10.0.1\\buildTransitive\\Microsoft.Maui.Resizetizer.After.targets",
+              "ViewState": "AgIAAFICAAAAAAAAAAAMwHECAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-01-24T10:27:36.913Z"
             },
             {
               "$type": "Document",
@@ -87,11 +89,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "App.xaml",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\App.xaml",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\App.xaml",
               "RelativeDocumentMoniker": "App.xaml",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\App.xaml",
+              "ToolTip": "C:\\Data\\Projects\\womer\\App.xaml",
               "RelativeToolTip": "App.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
@@ -100,11 +102,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "MainPage.xaml",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\Pages\\MainPage.xaml",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\Pages\\MainPage.xaml",
               "RelativeDocumentMoniker": "Pages\\MainPage.xaml",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\Pages\\MainPage.xaml",
+              "ToolTip": "C:\\Data\\Projects\\womer\\Pages\\MainPage.xaml",
               "RelativeToolTip": "Pages\\MainPage.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
@@ -113,37 +115,37 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "WorkoutTimer.xaml.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\WorkoutTimer.xaml.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\WorkoutTimer.xaml.cs",
               "RelativeDocumentMoniker": "WorkoutTimer.xaml.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\WorkoutTimer.xaml.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\WorkoutTimer.xaml.cs",
               "RelativeToolTip": "WorkoutTimer.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAGkAAAAAAAAAAADgv30AAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T15:39:18.075Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "WorkoutTimer.xaml",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\WorkoutTimer.xaml",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\WorkoutTimer.xaml",
               "RelativeDocumentMoniker": "WorkoutTimer.xaml",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\WorkoutTimer.xaml",
+              "ToolTip": "C:\\Data\\Projects\\womer\\WorkoutTimer.xaml",
               "RelativeToolTip": "WorkoutTimer.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-01-20T15:36:14.686Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "App.xaml.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\App.xaml.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\App.xaml.cs",
               "RelativeDocumentMoniker": "App.xaml.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\App.xaml.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\App.xaml.cs",
               "RelativeToolTip": "App.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -151,11 +153,36 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 2,
+              "Title": "AppShell.xaml",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\AppShell.xaml",
+              "RelativeDocumentMoniker": "AppShell.xaml",
+              "ToolTip": "C:\\Data\\Projects\\womer\\AppShell.xaml",
+              "RelativeToolTip": "AppShell.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-20T15:30:02.852Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "App.g.i.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
+              "RelativeDocumentMoniker": "obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
+              "RelativeToolTip": "obj\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAhwEsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T15:56:22.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "AppShell.xaml.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\AppShell.xaml.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\AppShell.xaml.cs",
               "RelativeDocumentMoniker": "AppShell.xaml.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\AppShell.xaml.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\AppShell.xaml.cs",
               "RelativeToolTip": "AppShell.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -163,42 +190,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AppShell.xaml",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\AppShell.xaml",
-              "RelativeDocumentMoniker": "AppShell.xaml",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\AppShell.xaml",
-              "RelativeToolTip": "AppShell.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA5AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-01-20T15:30:02.852Z",
-              "EditorCaption": ""
+              "DocumentIndex": 8,
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\Pages\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "Pages\\MainPage.xaml.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\Pages\\MainPage.xaml.cs",
+              "RelativeToolTip": "Pages\\MainPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T15:55:47.529Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "MainPage.xaml.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\Pages\\MainPage.xaml.cs",
-              "RelativeDocumentMoniker": "Pages\\MainPage.xaml.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\Pages\\MainPage.xaml.cs",
-              "RelativeToolTip": "Pages\\MainPage.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T15:55:47.529Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "MauiProgram.cs",
-              "DocumentMoniker": "C:\\Data\\zsharp\\womer\\MauiProgram.cs",
+              "DocumentMoniker": "C:\\Data\\Projects\\womer\\MauiProgram.cs",
               "RelativeDocumentMoniker": "MauiProgram.cs",
-              "ToolTip": "C:\\Data\\zsharp\\womer\\MauiProgram.cs",
+              "ToolTip": "C:\\Data\\Projects\\womer\\MauiProgram.cs",
               "RelativeToolTip": "MauiProgram.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAQwBIAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-20T15:32:57.912Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T15:32:57.912Z"
             }
           ]
         }

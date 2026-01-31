@@ -21,13 +21,13 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = womer
-build_property.ProjectDir = C:\Data\zsharp\womer\
+build_property.ProjectDir = C:\Data\Projects\womer\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Data/zsharp/womer/App.xaml]
+[C:/Data/Projects/womer/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.App.xaml
 build_metadata.AdditionalFiles.TargetPath = App.xaml
@@ -37,7 +37,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/AppShell.xaml]
+[C:/Data/Projects/womer/AppShell.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.AppShell.xaml
 build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
@@ -47,7 +47,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/Controls/AddButton.xaml]
+[C:/Data/Projects/womer/Pages/Controls/AddButton.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.Controls.AddButton.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Controls\AddButton.xaml
@@ -57,7 +57,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/Controls/CategoryChart.xaml]
+[C:/Data/Projects/womer/Pages/Controls/CategoryChart.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.Controls.CategoryChart.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Controls\CategoryChart.xaml
@@ -67,7 +67,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/Controls/ProjectCardView.xaml]
+[C:/Data/Projects/womer/Pages/Controls/ProjectCardView.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.Controls.ProjectCardView.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Controls\ProjectCardView.xaml
@@ -77,7 +77,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/Controls/TagView.xaml]
+[C:/Data/Projects/womer/Pages/Controls/TagView.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.Controls.TagView.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Controls\TagView.xaml
@@ -87,7 +87,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/Controls/TaskView.xaml]
+[C:/Data/Projects/womer/Pages/Controls/TaskView.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.Controls.TaskView.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Controls\TaskView.xaml
@@ -97,7 +97,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/MainPage.xaml]
+[C:/Data/Projects/womer/Pages/MainPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.MainPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\MainPage.xaml
@@ -107,7 +107,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/ManageMetaPage.xaml]
+[C:/Data/Projects/womer/Pages/ManageMetaPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.ManageMetaPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\ManageMetaPage.xaml
@@ -117,7 +117,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/ProjectDetailPage.xaml]
+[C:/Data/Projects/womer/Pages/ProjectDetailPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.ProjectDetailPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\ProjectDetailPage.xaml
@@ -127,7 +127,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/ProjectListPage.xaml]
+[C:/Data/Projects/womer/Pages/ProjectListPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.ProjectListPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\ProjectListPage.xaml
@@ -137,7 +137,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Pages/TaskDetailPage.xaml]
+[C:/Data/Projects/womer/Pages/TaskDetailPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Pages.TaskDetailPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\TaskDetailPage.xaml
@@ -147,7 +147,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Resources/Styles/AppStyles.xaml]
+[C:/Data/Projects/womer/Resources/Styles/AppStyles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Resources.Styles.AppStyles.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\AppStyles.xaml
@@ -157,7 +157,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Resources/Styles/Colors.xaml]
+[C:/Data/Projects/womer/Resources/Styles/Colors.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Resources.Styles.Colors.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
@@ -167,7 +167,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/Resources/Styles/Styles.xaml]
+[C:/Data/Projects/womer/Resources/Styles/Styles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.Resources.Styles.Styles.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
@@ -177,7 +177,7 @@ build_metadata.AdditionalFiles.NoWarn =
 build_metadata.AdditionalFiles.EnableDiagnostics = 
 build_metadata.AdditionalFiles.LineInfo = 
 
-[C:/Data/zsharp/womer/WorkoutTimer.xaml]
+[C:/Data/Projects/womer/WorkoutTimer.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = womer.WorkoutTimer.xaml
 build_metadata.AdditionalFiles.TargetPath = WorkoutTimer.xaml
