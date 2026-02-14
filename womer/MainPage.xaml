@@ -1,98 +1,122 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="womer.MainPage">
+<ContentPage
+    x:Class="womer.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Workout Timer">
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
-            <Label Text="Work"
-                   FontSize="24"
-                   HorizontalOptions="Center" />
+            <Label
+                FontSize="24"
+                HorizontalOptions="Center"
+                Text="Work"
+                TextColor="{StaticResource Primary}" />
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                <Entry x:Name="WorkMinutesEntry"
-                       Placeholder="mm"
-                       Keyboard="Numeric"
-                       MaxLength="2"
-                       WidthRequest="50"
-                       FontSize="20"
-                       TextChanged="MinutesEntry_TextChanged"
-                       HorizontalTextAlignment="Center" />
+                <Entry
+                    x:Name="WorkMinutesEntry"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Keyboard="Numeric"
+                    MaxLength="2"
+                    Placeholder="mm"
+                    TextChanged="MinutesEntry_TextChanged"
+                    TextColor="{StaticResource Primary}"
+                    WidthRequest="50" />
 
-                <Label Text=":" FontSize="20" VerticalTextAlignment="Center" />
+                <Label
+                    FontSize="20"
+                    Text=":"
+                    TextColor="{StaticResource Primary}"
+                    VerticalTextAlignment="Center" />
 
-                <Entry x:Name="WorkSecondsEntry"
-                       Placeholder="ss"
-                       Keyboard="Numeric"
-                       MaxLength="2"
-                       WidthRequest="50"
-                       FontSize="20"
-                       TextChanged="SecondsEntry_TextChanged"
-                       HorizontalTextAlignment="Center" />
+                <Entry
+                    x:Name="WorkSecondsEntry"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Keyboard="Numeric"
+                    MaxLength="2"
+                    Placeholder="ss"
+                    TextChanged="SecondsEntry_TextChanged"
+                    TextColor="{StaticResource Primary}"
+                    WidthRequest="50" />
             </HorizontalStackLayout>
 
             <BoxView
-                     Color="Gray"
-                     HeightRequest="2"
-                     HorizontalOptions="Fill"
-                     Margin="0,0,0,8" />
+                Margin="0,0,0,8"
+                HeightRequest="2"
+                HorizontalOptions="Fill"
+                Color="{StaticResource Primary}" />
 
-            <Label Text="Rest"
-                   FontSize="24"
-                   HorizontalOptions="Center" />
+            <Label
+                FontSize="24"
+                HorizontalOptions="Center"
+                Text="Rest"
+                TextColor="{StaticResource Primary}" />
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                <Entry x:Name="RestMinutesEntry"
-                       Placeholder="mm"
-                       Keyboard="Numeric"
-                       MaxLength="2"
-                       WidthRequest="50"
-                       FontSize="20"
-                       TextChanged="MinutesEntry_TextChanged"
-                       HorizontalTextAlignment="Center" />
+                <Entry
+                    x:Name="RestMinutesEntry"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Keyboard="Numeric"
+                    MaxLength="2"
+                    Placeholder="mm"
+                    TextChanged="MinutesEntry_TextChanged"
+                    TextColor="{StaticResource Primary}"
+                    WidthRequest="50" />
 
-                <Label Text=":" FontSize="20" VerticalTextAlignment="Center" />
+                <Label
+                    FontSize="20"
+                    Text=":"
+                    TextColor="{StaticResource Primary}"
+                    VerticalTextAlignment="Center" />
 
-                <Entry x:Name="RestSecondsEntry"
-                       Placeholder="ss"
-                       Keyboard="Numeric"
-                       MaxLength="2"
-                       WidthRequest="50"
-                       FontSize="20"
-                       TextChanged="SecondsEntry_TextChanged"
-                       HorizontalTextAlignment="Center" />
+                <Entry
+                    x:Name="RestSecondsEntry"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Keyboard="Numeric"
+                    MaxLength="2"
+                    Placeholder="ss"
+                    TextChanged="SecondsEntry_TextChanged"
+                    TextColor="{StaticResource Primary}"
+                    WidthRequest="50" />
             </HorizontalStackLayout>
 
             <BoxView
-                     Color="Gray"
-                     HeightRequest="2"
-                     HorizontalOptions="Fill"
-                     Margin="0,0,0,8" />
+                Margin="0,0,0,8"
+                HeightRequest="2"
+                HorizontalOptions="Fill"
+                Color="{StaticResource Primary}" />
 
-            <Label Text="Sets"
-                   FontSize="24"
-                   HorizontalOptions="Center" />
+            <Label
+                FontSize="24"
+                HorizontalOptions="Center"
+                Text="Sets"
+                TextColor="{StaticResource Primary}" />
 
-            <Entry x:Name="NumberOfSetsEntry"
-                       Placeholder="0"
-                       Keyboard="Numeric"
-                       MaxLength="2"
-                       WidthRequest="50"
-                       FontSize="20"
-                       TextChanged="NumberOfSetsEntry_TextChanged"
-                       HorizontalTextAlignment="Center" />
+            <Entry
+                x:Name="NumberOfSetsEntry"
+                FontSize="20"
+                HorizontalTextAlignment="Center"
+                Keyboard="Numeric"
+                MaxLength="2"
+                Placeholder="0"
+                TextChanged="NumberOfSetsEntry_TextChanged"
+                TextColor="{StaticResource Primary}"
+                WidthRequest="50" />
             <Button
+                Clicked="StartButton_Clicked"
+                HorizontalOptions="Center"
                 Text="Start"
-                HorizontalOptions="Center"
-                WidthRequest="200"
-                Clicked="StartButton_Clicked" />
+                WidthRequest="200" />
             <Button
-                Text="Clear"
+                Clicked="ClearButton_Clicked"
                 HorizontalOptions="Center"
-                WidthRequest="200"
-                Clicked="ClearButton_Clicked" />
-
-
+                Text="Clear"
+                WidthRequest="200" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="womer.SettingsPage"
-             Title="SettingsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Button
-             Text="Back"
-             Clicked="BackButton_Clicked" />
-    </VerticalStackLayout>
+<ContentPage
+    x:Class="womer.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Settings">
+    <VerticalStackLayout Padding="24" Spacing="16">
+        <Label
+            FontSize="20"
+            Text="Sound volume"
+            TextColor="{StaticResource Primary}" />
 
+        <Slider
+            x:Name="VolumeSlider"
+            Maximum="1"
+            Minimum="0"
+            ValueChanged="VolumeSlider_ValueChanged" />
+
+        <Label
+            x:Name="VolumeValueLabel"
+            FontSize="14"
+            TextColor="{StaticResource Primary}" />
+        <BoxView
+            Margin="0,0,0,8"
+            HeightRequest="2"
+            HorizontalOptions="Fill"
+            Color="{StaticResource Primary}" />
+
+        <Label
+            FontSize="16"
+            Text="This application is built buy a solo dev. The main financing for me to be able to do this are donations if you liked this app,clicked on the button below"
+            TextColor="{StaticResource Secondary}" />
+
+        <Button
+            x:Name="BuyMeCoffeeButton"
+            Clicked="BuyMeCoffeeButton_Clicked"
+            Text="Buy me a coffee" />
+    </VerticalStackLayout>
 </ContentPage>
