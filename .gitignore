@@ -1,76 +1,27 @@
-# .NET MAUI / Visual Studio / Rider / VS Code
-
-# Build outputs
 bin/
 obj/
-**/bin/
-**/obj/
-
-# MAUI platform-specific build outputs
-**/Platforms/*/bin/
-**/Platforms/*/obj/
-
-# MAUI generated/intermediate XAML and source
-*.g.cs
-*.g.i.cs
-*.sg.cs
-obj/**/App.g.i.cs
-
-# Resources (generated or platform-packed intermediates)
-**/Resources/**/*.generated.*
-**/Resources/**/Raw/*
-
-# Solution and IDE caches
 .vs/
-.idea/
 .vscode/
-*.sln.docstates
-
-# User-specific files
+.idea/
+*.sln.iml
 *.user
-*.rsuser
 *.suo
 *.userosscache
-
-# Logs
+*.sln.docstates
+*.cache
+*.tmp
+*.maui.cache
 *.log
-
-# OS junk
-.DS_Store
-Thumbs.db
-
-# Debugger temp (Visual Studio)
-**/.vsdbgsrc/
-
-# NuGet
+*.pdb
+*.opendb
+*.ipch
+*.pidb
 *.nupkg
 *.snupkg
-# Legacy packages folder (if used)
 packages/
-
-# Publish / distribution
-publish/
-artifacts/
-
-# Test coverage
-coverage/
-*.coverage
-*.coveragexml
-
-# Tooling caches
-/.localhistory/
-/.history/
-
-# Node tooling (if present)
-node_modules/
-
-# Rider
-*.sln.iml
-
-# Local config/secrets (adjust per project)
-appsettings.*.local.json
-secrets.json
-
-# Android specific (uncomment if you create local keystores)
-# *.keystore
-# *.jks
+TestResults/
+_NCrunch_*
+*.ncrunch*
+.DS_Store
+Thumbs.db
+ehthumbs.db
