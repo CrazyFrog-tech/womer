@@ -9,6 +9,7 @@
     Shell.FlyoutBehavior="Disabled">
     <Shell.ToolbarItems>
         <ToolbarItem
+            x:Name="SettingsToolbarItem"
             Clicked="SettingsToolbarItem_Clicked"
             IconImageSource="setting.png"
             Order="Primary"
@@ -17,5 +18,6 @@
     </Shell.ToolbarItems>
     <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
     <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" Route="SettingsPage" />
+    <ShellContent ContentTemplate="{DataTemplate local:TimerPage}" Route="TimerPage" />
 
 </Shell>

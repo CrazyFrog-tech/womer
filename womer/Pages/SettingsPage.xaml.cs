@@ -1,25 +1,33 @@
 using Microsoft.Maui.Storage;
+using womer.Services;
 
 namespace womer;
 
 public partial class SettingsPage : ContentPage
 {
-    private const string VolumePreferenceKey = "Volume";
     private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
+    private readonly IWorkoutService _settings;
+
 
 
     public SettingsPage()
     {
         InitializeComponent();
 
-        var volume = Preferences.Default.Get(VolumePreferenceKey, 1.0);
-        VolumeSlider.Value = volume;
-        UpdateVolumeLabel(volume);
+        if (IPlatformApplication.Current == null)
+            throw new InvalidOperationException("Platform application is not initialized.");
+
+        _settings = IPlatformApplication.Current.Services.GetRequiredService<IWorkoutService>();
+        if (_settings == null)
+            throw new InvalidOperationException("Settings service not available.");
+
+        VolumeSlider.Value = _settings.Volume;
+        UpdateVolumeLabel(_settings.Volume);
     }
 
     private void VolumeSlider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
-        Preferences.Default.Set(VolumePreferenceKey, e.NewValue);
+        _settings.Volume = e.NewValue;
         UpdateVolumeLabel(e.NewValue);
     }
 

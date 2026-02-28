@@ -9,6 +9,7 @@
     <Color x:Key="Secondary">#9c9723</Color>
     <Color x:Key="SecondaryDarkText">#151501</Color>
     <Color x:Key="Tertiary">#9c9723</Color>
+    <Color x:Key="RestGreen">#66BB6A</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

@@ -3,122 +3,173 @@
     x:Class="womer.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Workout Timer">
+    Title="Workout Timer"
+    BackgroundColor="{StaticResource Primary}">
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
             <Label
-                FontSize="24"
+                FontAttributes="Bold"
+                FontSize="28"
                 HorizontalOptions="Center"
                 Text="Work"
-                TextColor="{StaticResource Primary}" />
+                TextColor="{StaticResource Black}" />
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
                 <Entry
                     x:Name="WorkMinutesEntry"
-                    FontSize="20"
+                    Focused="TimeEntry_Focused"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     HorizontalTextAlignment="Center"
                     Keyboard="Numeric"
                     MaxLength="2"
                     Placeholder="mm"
+                    PlaceholderColor="{StaticResource Black}"
                     TextChanged="MinutesEntry_TextChanged"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     WidthRequest="50" />
 
                 <Label
-                    FontSize="20"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     Text=":"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     VerticalTextAlignment="Center" />
 
                 <Entry
                     x:Name="WorkSecondsEntry"
-                    FontSize="20"
+                    Focused="TimeEntry_Focused"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     HorizontalTextAlignment="Center"
                     Keyboard="Numeric"
                     MaxLength="2"
                     Placeholder="ss"
+                    PlaceholderColor="{StaticResource Black}"
                     TextChanged="SecondsEntry_TextChanged"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     WidthRequest="50" />
             </HorizontalStackLayout>
+
+            <Label
+                x:Name="WorkSecondsErrorLabel"
+                FontAttributes="Bold"
+                FontSize="12"
+                HorizontalOptions="Center"
+                IsVisible="False"
+                TextColor="Red" />
 
             <BoxView
                 Margin="0,0,0,8"
                 HeightRequest="2"
                 HorizontalOptions="Fill"
-                Color="{StaticResource Primary}" />
+                Color="{StaticResource Black}" />
 
             <Label
-                FontSize="24"
+                FontAttributes="Bold"
+                FontSize="28"
                 HorizontalOptions="Center"
                 Text="Rest"
-                TextColor="{StaticResource Primary}" />
+                TextColor="{StaticResource Black}" />
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
                 <Entry
                     x:Name="RestMinutesEntry"
-                    FontSize="20"
+                    Focused="TimeEntry_Focused"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     HorizontalTextAlignment="Center"
                     Keyboard="Numeric"
                     MaxLength="2"
                     Placeholder="mm"
+                    PlaceholderColor="{StaticResource Black}"
                     TextChanged="MinutesEntry_TextChanged"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     WidthRequest="50" />
 
                 <Label
-                    FontSize="20"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     Text=":"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     VerticalTextAlignment="Center" />
 
                 <Entry
                     x:Name="RestSecondsEntry"
-                    FontSize="20"
+                    Focused="TimeEntry_Focused"
+                    FontAttributes="Bold"
+                    FontSize="22"
                     HorizontalTextAlignment="Center"
                     Keyboard="Numeric"
                     MaxLength="2"
                     Placeholder="ss"
+                    PlaceholderColor="{StaticResource Black}"
                     TextChanged="SecondsEntry_TextChanged"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{StaticResource Black}"
                     WidthRequest="50" />
             </HorizontalStackLayout>
+
+            <Label
+                x:Name="RestSecondsErrorLabel"
+                FontAttributes="Bold"
+                FontSize="12"
+                HorizontalOptions="Center"
+                IsVisible="False"
+                TextColor="Red" />
 
             <BoxView
                 Margin="0,0,0,8"
                 HeightRequest="2"
                 HorizontalOptions="Fill"
-                Color="{StaticResource Primary}" />
+                Color="{StaticResource Black}" />
 
             <Label
-                FontSize="24"
+                FontAttributes="Bold"
+                FontSize="28"
                 HorizontalOptions="Center"
                 Text="Sets"
-                TextColor="{StaticResource Primary}" />
+                TextColor="{StaticResource Black}" />
 
             <Entry
                 x:Name="NumberOfSetsEntry"
-                FontSize="20"
+                Focused="TimeEntry_Focused"
+                FontAttributes="Bold"
+                FontSize="22"
                 HorizontalTextAlignment="Center"
                 Keyboard="Numeric"
                 MaxLength="2"
-                Placeholder="0"
+                Placeholder="Sets"
+                PlaceholderColor="{StaticResource Black}"
                 TextChanged="NumberOfSetsEntry_TextChanged"
-                TextColor="{StaticResource Primary}"
+                TextColor="{StaticResource Black}"
                 WidthRequest="50" />
+            <Label
+                x:Name="SetsErrorLabel"
+                FontAttributes="Bold"
+                FontSize="12"
+                HorizontalOptions="Center"
+                IsVisible="False"
+                TextColor="Red" />
             <Button
+                BackgroundColor="{StaticResource Black}"
                 Clicked="StartButton_Clicked"
+                FontAttributes="Bold"
+                FontSize="20"
                 HorizontalOptions="Center"
                 Text="Start"
+                TextColor="{StaticResource Primary}"
                 WidthRequest="200" />
             <Button
+                BackgroundColor="{StaticResource Black}"
                 Clicked="ClearButton_Clicked"
+                FontAttributes="Bold"
+                FontSize="20"
                 HorizontalOptions="Center"
                 Text="Clear"
+                TextColor="{StaticResource Primary}"
                 WidthRequest="200" />
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>
