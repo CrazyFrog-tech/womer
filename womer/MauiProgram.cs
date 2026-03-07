@@ -19,7 +19,11 @@ namespace womer
 
 
 #if DEBUG
+            builder.Logging.ClearProviders();
             builder.Logging.AddDebug();
+            builder.Logging.SetMinimumLevel(LogLevel.Debug);
+            builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
+            builder.Logging.AddFilter("womer", LogLevel.Debug);
 #endif
 
             return builder.Build();

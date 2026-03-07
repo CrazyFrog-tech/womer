@@ -84,7 +84,7 @@ public partial class TimerPage : ContentPage
 					return;
 			}
 
-			await DisplayAlert("Workout", "Workout complete.", "OK");
+			await DisplayAlertAsync("Workout", "Workout complete.", "OK");
 			await Shell.Current.GoToAsync("..");
 		}
 		catch (TaskCanceledException)
@@ -121,15 +121,17 @@ public partial class TimerPage : ContentPage
 
 	private async Task RunPhaseAsync(int currentSet, int totalSets, int durationSeconds, bool isWorkPhase, CancellationToken cancellationToken)
 	{
-		for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
+		const double ringOffset = 0.95;
+        for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
+			double adjustedRemaining = secondsRemaining - ringOffset;
 
-			double progress = durationSeconds == 0
-				? 0
-				: (double)secondsRemaining / durationSeconds;
+            double progress = durationSeconds == 0
+                ? 0
+				: (double)adjustedRemaining / durationSeconds;
 
-			UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
+            UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
 
 			if (secondsRemaining == 0)
 				break;
@@ -159,29 +161,31 @@ public partial class TimerPage : ContentPage
 		public double RingProgress { get; set; } = 1;
 		public Color RingColor { get; set; } = Colors.Black;
 
-		public void Draw(ICanvas canvas, RectF dirtyRect)
-		{
-			float size = Math.Min(dirtyRect.Width, dirtyRect.Height) - RingThickness;
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            float size = Math.Min(dirtyRect.Width, dirtyRect.Height) - RingThickness;
 			if (size <= 0)
 				return;
 
-			float x = (dirtyRect.Width - size) / 2;
-			float y = (dirtyRect.Height - size) / 2;
+            float x = (dirtyRect.Width - size) / 2;
+            float y = (dirtyRect.Height - size) / 2;
 
-			canvas.StrokeSize = RingThickness;
-			canvas.StrokeLineCap = LineCap.Round;
+            canvas.StrokeSize = RingThickness;
+            canvas.StrokeLineCap = LineCap.Round;
 
-			canvas.StrokeColor = Color.FromRgba(0, 0, 0, 60);
-			canvas.DrawEllipse(x, y, size, size);
+            canvas.StrokeColor = Color.FromRgba(0, 0, 0, 60);
+            canvas.DrawEllipse(x, y, size, size);
 
-			if (RingProgress <= 0)
+            double progress = Math.Clamp(RingProgress, 0, 1);
+
+			if (progress <= 0)
 				return;
 
-			float startAngle = -90;
-			float endAngle = startAngle + (float)(360 * Math.Clamp(RingProgress, 0, 1));
+            float startAngle = -90;
+            float endAngle = startAngle + (float)(360 * progress);
 
-			canvas.StrokeColor = RingColor;
-			canvas.DrawArc(x, y, size, size, startAngle, endAngle, true, false);
-		}
-	}
+            canvas.StrokeColor = RingColor;
+            canvas.DrawArc(x, y, size, size, startAngle, endAngle, true, false);
+        }
+    }
 }
