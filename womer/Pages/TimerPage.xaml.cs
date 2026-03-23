@@ -1,13 +1,20 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
 using womer.Services;
+#if ANDROID
+using Android.Media;
+#endif
 
 namespace womer;
 
 public partial class TimerPage : ContentPage
 {
-	private readonly Color _workBackgroundColor;
+#if ANDROID
+    private readonly ToneGenerator _toneGenerator = new(Android.Media.Stream.Notification, 70);
+#endif
+
+    private readonly Color _workBackgroundColor;
 	private readonly Color _restBackgroundColor;
 	private readonly Color _foregroundColor;
 
@@ -49,11 +56,17 @@ public partial class TimerPage : ContentPage
 
 	protected override void OnDisappearing()
 	{
-		_timerCancellation?.Cancel();
-		_timerCancellation?.Dispose();
-		_timerCancellation = null;
-		base.OnDisappearing();
-	}
+        _timerCancellation?.Cancel();
+        _timerCancellation?.Dispose();
+        _timerCancellation = null;
+
+#if ANDROID
+        _toneGenerator.Release();
+        _toneGenerator.Dispose();
+#endif
+
+        base.OnDisappearing();
+    }
 
 	private async Task StartWorkoutTimerAsync()
 	{
@@ -83,9 +96,10 @@ public partial class TimerPage : ContentPage
 				if (cancellationToken.IsCancellationRequested)
 					return;
 			}
+            PlayWorkoutCompleteCue();
 
-			await DisplayAlertAsync("Workout", "Workout complete.", "OK");
-			await Shell.Current.GoToAsync("..");
+            await DisplayAlertAsync("Workout", "Workout complete.", "OK");
+            await Shell.Current.GoToAsync("..");
 		}
 		catch (TaskCanceledException)
 		{
@@ -133,12 +147,25 @@ public partial class TimerPage : ContentPage
 
             UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
 
-			if (secondsRemaining == 0)
-				break;
+            if (secondsRemaining > 0)
+                PlayTickCue();
 
-			await Task.Delay(1000, cancellationToken);
+            if (secondsRemaining == 0)
+            {
+                bool hasAnotherPhase = isWorkPhase
+                       ? currentSet < totalSets && _totalRestSeconds > 0
+                       : currentSet < totalSets;
+
+                if (hasAnotherPhase)
+                    PlayPhaseSwitchCue();
+
+                break;
+            }
+
+            await Task.Delay(1000, cancellationToken);
 		}
 	}
+	
 
 	private void UpdateTimerDisplay(int currentSet, int totalSets, int secondsRemaining, double progress, bool isWorkPhase)
 	{
@@ -153,8 +180,47 @@ public partial class TimerPage : ContentPage
 		_ringDrawable.RingColor = _foregroundColor;
 		RingView.Invalidate();
 	}
+    private void PlayTickCue()
+    {
+#if ANDROID
+        _toneGenerator.StartTone(Tone.SupBusy, 90);
+#endif
+    }
 
-	private sealed class CountdownRingDrawable : IDrawable
+    private void PlayPhaseSwitchCue()
+    {
+#if ANDROID
+        _toneGenerator.StartTone(Tone.PropAck, 180);
+#endif
+        Vibrate(60);
+    }
+
+    private void PlayWorkoutCompleteCue()
+    {
+#if ANDROID
+        _toneGenerator.StartTone(Tone.CdmaAlertCallGuard, 900);
+#endif
+        Vibrate(200);
+    }
+
+    private void Vibrate(int milliseconds)
+    {
+        try
+        {
+            Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(milliseconds));
+        }
+        catch (FeatureNotSupportedException)
+        {
+            _logger.LogDebug("Vibration is not supported on this device.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Unable to vibrate device.");
+        }
+    }
+
+
+    private sealed class CountdownRingDrawable : IDrawable
 	{
 		private const float RingThickness = 18f;
 

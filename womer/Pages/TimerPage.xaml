@@ -18,9 +18,7 @@
                 Text="WORK"
                 TextColor="Black" />
 
-            <Grid
-                HeightRequest="260"
-                WidthRequest="260">
+            <Grid HeightRequest="260" WidthRequest="260">
                 <GraphicsView
                     x:Name="RingView"
                     HeightRequest="260"

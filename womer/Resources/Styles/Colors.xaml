@@ -40,4 +40,13 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}" />
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}" />
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}" />
+
+    <x:Array x:Key="ConfettiColors" Type="{x:Type Color}">
+        <Color>#E1D816</Color>
+        <Color>#66BB6A</Color>
+        <Color>#FF5252</Color>
+        <Color>#448AFF</Color>
+        <Color>#FF6D00</Color>
+        <Color>#E040FB</Color>
+    </x:Array>
 </ResourceDictionary>
