@@ -97,6 +97,7 @@ public partial class TimerPage : ContentPage
 					return;
 			}
             PlayWorkoutCompleteCue();
+            await PlayConfettiAsync();
 
             await DisplayAlertAsync("Workout", "Workout complete.", "OK");
             await Shell.Current.GoToAsync("..");
@@ -201,6 +202,71 @@ public partial class TimerPage : ContentPage
         _toneGenerator.StartTone(Tone.CdmaAlertCallGuard, 900);
 #endif
         Vibrate(200);
+    }
+
+    private async Task PlayConfettiAsync()
+    {
+        if (ConfettiLayer is null)
+            return;
+
+        if (ConfettiLayer.Width <= 0 || ConfettiLayer.Height <= 0)
+            await Task.Delay(16);
+
+        double width = ConfettiLayer.Width > 0 ? ConfettiLayer.Width : Width;
+        double height = ConfettiLayer.Height > 0 ? ConfettiLayer.Height : Height;
+
+        if (width <= 0 || height <= 0)
+            return;
+
+        Color[] confettiColors =
+        [
+            Colors.Yellow,
+            Colors.Orange,
+            Colors.DeepSkyBlue,
+            Colors.HotPink,
+            Colors.MediumSpringGreen,
+            Colors.White
+        ];
+
+        const int pieceCount = 42;
+        Task[] animations = new Task[pieceCount * 2];
+        int animationIndex = 0;
+
+        ConfettiLayer.Children.Clear();
+        ConfettiLayer.IsVisible = true;
+        ConfettiLayer.Opacity = 1;
+
+        for (int i = 0; i < pieceCount; i++)
+        {
+            var piece = new BoxView
+            {
+                Color = confettiColors[Random.Shared.Next(confettiColors.Length)],
+                WidthRequest = Random.Shared.Next(6, 12),
+                HeightRequest = Random.Shared.Next(10, 18),
+                Rotation = Random.Shared.Next(-45, 45),
+                CornerRadius = 2,
+                Opacity = 0.95
+            };
+
+            double startX = Random.Shared.NextDouble() * Math.Max(10, width - 10);
+            double startY = -20 - Random.Shared.Next(0, 120);
+            AbsoluteLayout.SetLayoutBounds(piece, new Rect(startX, startY, piece.WidthRequest, piece.HeightRequest));
+            ConfettiLayer.Children.Add(piece);
+
+            double xDrift = Random.Shared.Next(-100, 101);
+            double yDrop = height + Random.Shared.Next(40, 140);
+            uint duration = (uint)Random.Shared.Next(900, 1700);
+
+            animations[animationIndex++] = piece.TranslateTo(xDrift, yDrop, duration, Easing.CubicIn);
+            animations[animationIndex++] = piece.RotateTo(Random.Shared.Next(-360, 361), duration, Easing.Linear);
+        }
+
+        await Task.WhenAll(animations);
+        await ConfettiLayer.FadeToAsync(0, 120);
+
+        ConfettiLayer.Children.Clear();
+        ConfettiLayer.Opacity = 1;
+        ConfettiLayer.IsVisible = false;
     }
 
     private void Vibrate(int milliseconds)

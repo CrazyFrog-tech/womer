@@ -44,5 +44,10 @@
                 Text="1/1"
                 TextColor="Black" />
         </VerticalStackLayout>
+
+        <AbsoluteLayout
+            x:Name="ConfettiLayer"
+            InputTransparent="True"
+            IsVisible="False" />
     </Grid>
 </ContentPage>
