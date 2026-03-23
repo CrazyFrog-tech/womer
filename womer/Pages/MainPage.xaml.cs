@@ -18,6 +18,22 @@ namespace womer
         {
             InitializeComponent();
 
+            var tapGesture = new TapGestureRecognizer();
+            tapGesture.Tapped += async (s, e) =>
+            {
+                WorkMinutesEntry?.Unfocus();
+                WorkSecondsEntry?.Unfocus();
+                RestMinutesEntry?.Unfocus();
+                RestSecondsEntry?.Unfocus();
+                NumberOfSetsEntry?.Unfocus();
+
+                if (WorkMinutesEntry != null)
+                {
+                    await WorkMinutesEntry.HideSoftInputAsync(System.Threading.CancellationToken.None);
+                }
+            };
+            this.Content.GestureRecognizers.Add(tapGesture);
+
             _logger = IPlatformApplication.Current?.Services.GetService<ILogger<MainPage>>()
                 ?? NullLogger<MainPage>.Instance;
 
