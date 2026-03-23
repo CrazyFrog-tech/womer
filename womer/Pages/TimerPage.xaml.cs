@@ -25,6 +25,9 @@ public partial class TimerPage : ContentPage
 	private readonly ILogger<TimerPage> _logger;
 	private CancellationTokenSource? _timerCancellation;
 	private bool _timerStarted;
+	private bool _isTimerRunning;
+	private bool _isExitConfirmationVisible;
+	private bool _isNavigatingBack;
 
 	private int _totalWorkSeconds;
 	private int _totalRestSeconds;
@@ -49,6 +52,9 @@ public partial class TimerPage : ContentPage
 	{
 		base.OnAppearing();
 
+		if (Shell.Current is not null)
+			Shell.Current.Navigating += OnShellNavigating;
+
 		if (_timerStarted)
 			return;
 
@@ -58,6 +64,9 @@ public partial class TimerPage : ContentPage
 
 	protected override void OnDisappearing()
 	{
+		if (Shell.Current is not null)
+			Shell.Current.Navigating -= OnShellNavigating;
+
         _timerCancellation?.Cancel();
         _timerCancellation?.Dispose();
         _timerCancellation = null;
@@ -75,12 +84,13 @@ public partial class TimerPage : ContentPage
 		if (!TryLoadWorkoutValues())
 		{
 			await DisplayAlertAsync("Timer", "Invalid workout values.", "OK");
-			await Shell.Current.GoToAsync("..");
+			await NavigateBackAsync();
 			return;
 		}
 
 		_timerCancellation = new CancellationTokenSource();
 		CancellationToken cancellationToken = _timerCancellation.Token;
+		_isTimerRunning = true;
 
 		try
 		{
@@ -102,7 +112,7 @@ public partial class TimerPage : ContentPage
             await PlayConfettiAsync();
 
             await DisplayAlertAsync("Workout", "Workout complete.", "OK");
-            await Shell.Current.GoToAsync("..");
+			await NavigateBackAsync();
 		}
 		catch (TaskCanceledException)
 		{
@@ -112,7 +122,62 @@ public partial class TimerPage : ContentPage
 		{
 			_logger.LogError(ex, "Unexpected error while running workout timer.");
 			await DisplayAlertAsync("Timer", "An unexpected error occurred.", "OK");
-			await Shell.Current.GoToAsync("..");
+			await NavigateBackAsync();
+		}
+		finally
+		{
+			_isTimerRunning = false;
+		}
+	}
+
+	private async Task ConfirmExitWhileTimerRunningAsync()
+	{
+		_isExitConfirmationVisible = true;
+
+		try
+		{
+			bool shouldStopTimer = await DisplayAlertAsync(
+				"Stop timer?",
+				"The timer is still running. Stop it and go back?",
+				"Stop",
+				"Stay");
+
+			if (!shouldStopTimer || _isNavigatingBack)
+				return;
+
+			_timerCancellation?.Cancel();
+			await NavigateBackAsync();
+		}
+		finally
+		{
+			_isExitConfirmationVisible = false;
+		}
+	}
+
+	private Task NavigateBackAsync()
+	{
+		_isNavigatingBack = true;
+		return Shell.Current.GoToAsync("..");
+	}
+
+	private async void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
+	{
+		if (!_isTimerRunning || _isNavigatingBack || _isExitConfirmationVisible || !e.CanCancel)
+			return;
+
+		if (e.Source is not ShellNavigationSource.Pop && e.Source is not ShellNavigationSource.PopToRoot)
+			return;
+
+		ShellNavigatingDeferral navigationDeferral = e.GetDeferral();
+
+		try
+		{
+			e.Cancel();
+			await ConfirmExitWhileTimerRunningAsync();
+		}
+		finally
+		{
+			navigationDeferral.Complete();
 		}
 	}
 
