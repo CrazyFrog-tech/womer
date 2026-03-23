@@ -13,7 +13,7 @@
         private void OnNavigated(object? sender, ShellNavigatedEventArgs e)
         {
             var location = e.Current?.Location?.ToString() ?? string.Empty;
-            SettingsToolbarItem.IsEnabled = !location.Contains("Settingspage", StringComparison.OrdinalIgnoreCase);
+            SettingsToolbarItem.IsEnabled = !location.Contains("Settingspage", StringComparison.OrdinalIgnoreCase) && !location.Contains("TimerPage", StringComparison.OrdinalIgnoreCase);
 
         }
 

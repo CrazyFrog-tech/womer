@@ -11,6 +11,7 @@ public partial class SettingsPage : ContentPage
 {
     private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
     private readonly IWorkoutService _settings;
+    private bool _isInitializingVolume;
 
 
 
@@ -29,13 +30,19 @@ public partial class SettingsPage : ContentPage
         if (TryGetSystemVolume(out double systemVolume))
             initialVolume = systemVolume;
 
+        _isInitializingVolume = true;
         VolumeSlider.Value = initialVolume;
+        _isInitializingVolume = false;
+
         _settings.Volume = initialVolume;
         UpdateVolumeLabel(initialVolume);
     }
 
     private void VolumeSlider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
+        if (_isInitializingVolume)
+            return;
+
         _settings.Volume = e.NewValue;
         SetSystemVolume(e.NewValue);
         UpdateVolumeLabel(e.NewValue);

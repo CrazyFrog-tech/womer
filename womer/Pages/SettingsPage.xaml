@@ -3,37 +3,99 @@
     x:Class="womer.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Settings">
-    <VerticalStackLayout Padding="24" Spacing="16">
-        <Label
-            FontSize="20"
-            Text="Sound volume"
-            TextColor="{StaticResource Primary}" />
+    Title="Settings"
+    BackgroundColor="{StaticResource Primary}">
 
-        <Slider
-            x:Name="VolumeSlider"
-            Maximum="1"
-            Minimum="0"
-            ValueChanged="VolumeSlider_ValueChanged" />
+    <Grid Padding="18" RowDefinitions="Auto,14,*">
 
-        <Label
-            x:Name="VolumeValueLabel"
-            FontSize="14"
-            TextColor="{StaticResource Primary}" />
-        <BoxView
-            Margin="0,0,0,8"
-            HeightRequest="2"
-            HorizontalOptions="Fill"
-            Color="{StaticResource Primary}" />
+        <Border
+            Grid.Row="0"
+            Padding="16"
+            BackgroundColor="{StaticResource Primary}"
+            Stroke="{StaticResource Black}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="2">
 
-        <Label
-            FontSize="16"
-            Text="This application is built buy a solo dev. The main financing for me to be able to do this are donations if you liked this app,clicked on the button below"
-            TextColor="{StaticResource Secondary}" />
+            <VerticalStackLayout Spacing="10">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Sound volume"
+                    TextColor="{StaticResource Black}" />
 
-        <Button
-            x:Name="BuyMeCoffeeButton"
-            Clicked="BuyMeCoffeeButton_Clicked"
-            Text="Buy me a coffee" />
-    </VerticalStackLayout>
+                <Slider
+                    x:Name="VolumeSlider"
+                    Maximum="1"
+                    MaximumTrackColor="{StaticResource Secondary}"
+                    Minimum="0"
+                    MinimumTrackColor="{StaticResource Black}"
+                    ThumbColor="{StaticResource Black}"
+                    ValueChanged="VolumeSlider_ValueChanged" />
+
+                <Label
+                    x:Name="VolumeValueLabel"
+                    FontAttributes="Bold"
+                    FontSize="13"
+                    TextColor="{StaticResource Black}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Border
+            Grid.Row="2"
+            Padding="16"
+            BackgroundColor="{StaticResource Black}"
+            Stroke="{StaticResource Secondary}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="2"
+            VerticalOptions="Fill">
+
+            <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="8">
+
+                <Label
+                    Grid.Row="0"
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    HorizontalTextAlignment="Center"
+                    Text="Support the developer"
+                    TextColor="{StaticResource Primary}" />
+
+                <Border
+                    Grid.Row="1"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    Stroke="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="2"
+                    VerticalOptions="Center">
+                    <Image
+                        Aspect="AspectFill"
+                        HeightRequest="200"
+                        Source="me.jpg"
+                        WidthRequest="200" />
+                </Border>
+
+                <Label
+                    Grid.Row="2"
+                    FontSize="16"
+                    HorizontalTextAlignment="Center"
+                    LineBreakMode="WordWrap"
+                    Text="Built by a solo developer. If this app helps your workouts, a coffee helps fund future updates."
+                    TextColor="{StaticResource White}" />
+
+                <Button
+                    x:Name="BuyMeCoffeeButton"
+                    Grid.Row="3"
+                    Padding="16,12"
+                    BackgroundColor="{StaticResource Primary}"
+                    Clicked="BuyMeCoffeeButton_Clicked"
+                    CornerRadius="12"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    HorizontalOptions="Fill"
+                    Text="Buy me a coffee"
+                    TextColor="{StaticResource Black}" />
+            </Grid>
+        </Border>
+
+    </Grid>
 </ContentPage>

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using womer.Services;
 #if ANDROID
 using Android.Media;
+using Android.Content;
+using Android.OS;
 #endif
 
 namespace womer;
@@ -137,6 +139,7 @@ public partial class TimerPage : ContentPage
 	private async Task RunPhaseAsync(int currentSet, int totalSets, int durationSeconds, bool isWorkPhase, CancellationToken cancellationToken)
 	{
 		const double ringOffset = 0.95;
+        const int phaseSwitchPauseMs = 500;
         for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
@@ -158,7 +161,10 @@ public partial class TimerPage : ContentPage
                        : currentSet < totalSets;
 
                 if (hasAnotherPhase)
+                {
                     PlayPhaseSwitchCue();
+                    await Task.Delay(phaseSwitchPauseMs, cancellationToken);
+                }
 
                 break;
             }
@@ -191,9 +197,9 @@ public partial class TimerPage : ContentPage
     private void PlayPhaseSwitchCue()
     {
 #if ANDROID
-        _toneGenerator.StartTone(Tone.PropAck, 180);
+        _toneGenerator.StartTone(Tone.CdmaAbbrReorder, 400);
 #endif
-        Vibrate(60);
+        Vibrate(150);
     }
 
     private void PlayWorkoutCompleteCue()
@@ -273,6 +279,37 @@ public partial class TimerPage : ContentPage
     {
         try
         {
+#if ANDROID
+            int durationMs = Math.Max(1, milliseconds);
+            var context = Android.App.Application.Context;
+
+            Vibrator? vibrator = null;
+
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
+                var manager = context.GetSystemService(Context.VibratorManagerService) as VibratorManager;
+                vibrator = manager?.DefaultVibrator;
+            }
+            else
+            {
+                #pragma warning disable CS0618
+                vibrator = context.GetSystemService(Context.VibratorService) as Vibrator;
+                #pragma warning restore CS0618
+            }
+
+            if (vibrator?.HasVibrator == true)
+            {
+                if (OperatingSystem.IsAndroidVersionAtLeast(26))
+                    vibrator.Vibrate(VibrationEffect.CreateOneShot(durationMs, VibrationEffect.DefaultAmplitude));
+                else
+                    #pragma warning disable CS0618
+                    vibrator.Vibrate(durationMs);
+                    #pragma warning restore CS0618
+
+                return;
+            }
+#endif
+
             Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(milliseconds));
         }
         catch (FeatureNotSupportedException)
