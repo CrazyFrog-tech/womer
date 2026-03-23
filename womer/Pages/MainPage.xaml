@@ -230,6 +230,18 @@
                 Grid.Column="0"
                 Padding="0,14"
                 BackgroundColor="{StaticResource Black}"
+                Clicked="ClearButton_Clicked"
+                CornerRadius="14"
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalOptions="Fill"
+                Text="Clear"
+                TextColor="{StaticResource Primary}" />
+
+            <Button
+                Grid.Column="1"
+                Padding="0,14"
+                BackgroundColor="{StaticResource Black}"
                 Clicked="StartButton_Clicked"
                 CornerRadius="14"
                 FontAttributes="Bold"
@@ -238,17 +250,7 @@
                 Text="Start"
                 TextColor="{StaticResource Primary}" />
 
-            <Button
-                Grid.Column="1"
-                Padding="0,14"
-                BackgroundColor="{StaticResource Black}"
-                Clicked="ClearButton_Clicked"
-                CornerRadius="14"
-                FontAttributes="Bold"
-                FontSize="20"
-                HorizontalOptions="Fill"
-                Text="Clear"
-                TextColor="{StaticResource Primary}" />
+
         </Grid>
 
     </Grid>
