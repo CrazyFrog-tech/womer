@@ -216,7 +216,7 @@ public partial class TimerPage : ContentPage
 
             UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
 
-            if (secondsRemaining > 0)
+            if (secondsRemaining < 4)
                 PlayTickCue();
 
             if (secondsRemaining == 0)
@@ -328,8 +328,8 @@ public partial class TimerPage : ContentPage
             double yDrop = height + Random.Shared.Next(40, 140);
             uint duration = (uint)Random.Shared.Next(900, 1700);
 
-            animations[animationIndex++] = piece.TranslateTo(xDrift, yDrop, duration, Easing.CubicIn);
-            animations[animationIndex++] = piece.RotateTo(Random.Shared.Next(-360, 361), duration, Easing.Linear);
+            animations[animationIndex++] = piece.TranslateToAsync(xDrift, yDrop, duration, Easing.CubicIn);
+            animations[animationIndex++] = piece.RotateToAsync(Random.Shared.Next(-360, 361), duration, Easing.Linear);
         }
 
         await Task.WhenAll(animations);
