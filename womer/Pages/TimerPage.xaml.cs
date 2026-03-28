@@ -6,6 +6,7 @@ using womer.Services;
 using Android.Media;
 using Android.Content;
 using Android.OS;
+using womer.Platforms.Android.Services;
 #endif
 
 namespace womer;
@@ -26,6 +27,7 @@ public partial class TimerPage : ContentPage
 	private CancellationTokenSource? _timerCancellation;
 	private bool _timerStarted;
 	private bool _isTimerRunning;
+	private bool _isPaused;
 	private bool _isExitConfirmationVisible;
 	private bool _isNavigatingBack;
 
@@ -36,6 +38,13 @@ public partial class TimerPage : ContentPage
 	public TimerPage()
 	{
 		InitializeComponent();
+
+		if (FindByName("PauseButton") is Button pauseButton)
+            pauseButton.Clicked += PauseButton_Clicked;
+
+		if (FindByName("CancelButton") is Button cancelButton)
+			cancelButton.Clicked += CancelButton_Clicked;
+
 		_logger = IPlatformApplication.Current?.Services.GetService<ILogger<TimerPage>>()
 			?? NullLogger<TimerPage>.Instance;
 
@@ -88,9 +97,15 @@ public partial class TimerPage : ContentPage
 			return;
 		}
 
+#if ANDROID
+		await EnsureAndroidNotificationPermissionAsync();
+#endif
+
 		_timerCancellation = new CancellationTokenSource();
 		CancellationToken cancellationToken = _timerCancellation.Token;
 		_isTimerRunning = true;
+		_isPaused = false;
+		SetPauseButtonText("Pause");
 
 		try
 		{
@@ -127,6 +142,9 @@ public partial class TimerPage : ContentPage
 		finally
 		{
 			_isTimerRunning = false;
+#if ANDROID
+			StopAndroidForegroundTimerNotification();
+#endif
 		}
 	}
 
@@ -207,6 +225,8 @@ public partial class TimerPage : ContentPage
         const int phaseSwitchPauseMs = 500;
         for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
 		{
+			await WaitWhilePausedAsync(cancellationToken);
+
 			cancellationToken.ThrowIfCancellationRequested();
 			double adjustedRemaining = secondsRemaining - ringOffset;
 
@@ -216,7 +236,7 @@ public partial class TimerPage : ContentPage
 
             UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
 
-            if (secondsRemaining < 4)
+            if (secondsRemaining is > 0 and < 4)
                 PlayTickCue();
 
             if (secondsRemaining == 0)
@@ -234,7 +254,29 @@ public partial class TimerPage : ContentPage
                 break;
             }
 
-            await Task.Delay(1000, cancellationToken);
+            await DelayOneSecondWithPauseAsync(cancellationToken);
+		}
+	}
+
+	private async Task WaitWhilePausedAsync(CancellationToken cancellationToken)
+	{
+		while (_isPaused)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			await Task.Delay(120, cancellationToken);
+		}
+	}
+
+	private async Task DelayOneSecondWithPauseAsync(CancellationToken cancellationToken)
+	{
+		int remainingDelayMs = 1000;
+
+		while (remainingDelayMs > 0)
+		{
+			await WaitWhilePausedAsync(cancellationToken);
+			int sliceMs = Math.Min(100, remainingDelayMs);
+			await Task.Delay(sliceMs, cancellationToken);
+			remainingDelayMs -= sliceMs;
 		}
 	}
 	
@@ -251,7 +293,79 @@ public partial class TimerPage : ContentPage
 		_ringDrawable.RingProgress = Math.Clamp(progress, 0, 1);
 		_ringDrawable.RingColor = _foregroundColor;
 		RingView.Invalidate();
+
+#if ANDROID
+		UpdateAndroidForegroundTimerNotification(currentSet, totalSets, secondsRemaining, isWorkPhase);
+#endif
 	}
+
+#if ANDROID
+    private async Task EnsureAndroidNotificationPermissionAsync()
+    {
+        try
+        {
+            if (!OperatingSystem.IsAndroidVersionAtLeast(33))
+                return;
+
+            var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
+            if (status != PermissionStatus.Granted)
+                await Permissions.RequestAsync<Permissions.PostNotifications>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Unable to request notification permission.");
+        }
+    }
+
+    private void UpdateAndroidForegroundTimerNotification(int currentSet, int totalSets, int secondsRemaining, bool isWorkPhase)
+    {
+        string phase = isWorkPhase ? "WORK" : "REST";
+        TimeSpan time = TimeSpan.FromSeconds(secondsRemaining);
+        string text = $"{time.Minutes:D2}:{time.Seconds:D2}";
+        string setLabel = $"{currentSet}/{totalSets}";
+
+        WorkoutTimerForegroundService.StartOrUpdate(phase, text, setLabel);
+    }
+
+    private static void StopAndroidForegroundTimerNotification()
+    {
+        WorkoutTimerForegroundService.Stop();
+    }
+#endif
+
+	private void SetPauseButtonText(string text)
+	{
+		if (FindByName("PauseButton") is Button pauseButton)
+			pauseButton.Text = text;
+	}
+
+	private async void CancelButton_Clicked(object? sender, EventArgs e)
+	{
+		if (_isNavigatingBack)
+			return;
+
+		_isPaused = false;
+		SetPauseButtonText("Pause");
+		_timerCancellation?.Cancel();
+		await NavigateBackAsync();
+	}
+
+	private void PauseButton_Clicked(object? sender, EventArgs e)
+	{
+		if (!_isTimerRunning || _isNavigatingBack)
+			return;
+
+		_isPaused = !_isPaused;
+		SetPauseButtonText(_isPaused ? "Resume" : "Pause");
+
+#if ANDROID
+		if (_isPaused)
+			WorkoutTimerForegroundService.StartOrUpdate("PAUSED", TimeLabel.Text ?? "00:00", SetLabel.Text ?? "1/1");
+		else
+			WorkoutTimerForegroundService.StartOrUpdate(PhaseLabel.Text ?? "WORK", TimeLabel.Text ?? "00:00", SetLabel.Text ?? "1/1");
+#endif
+	}
+
     private void PlayTickCue()
     {
 #if ANDROID
