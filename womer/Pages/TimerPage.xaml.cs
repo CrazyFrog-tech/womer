@@ -67,7 +67,17 @@ public partial class TimerPage : ContentPage
 			Shell.Current.Navigating += OnShellNavigating;
 
 		if (_timerStarted)
+		{
+			if (_isTimerRunning)
+			{
+				SetKeepScreenOn(true);
+#if ANDROID
+				MainActivity.SetTimerLockScreenMode(true);
+#endif
+			}
+
 			return;
+		}
 
 		_timerStarted = true;
 		await StartWorkoutTimerAsync();
@@ -78,14 +88,7 @@ public partial class TimerPage : ContentPage
 		if (Shell.Current is not null)
 			Shell.Current.Navigating -= OnShellNavigating;
 
-        _timerCancellation?.Cancel();
-        _timerCancellation?.Dispose();
-        _timerCancellation = null;
-
-#if ANDROID
-        _toneGenerator.Release();
-        _toneGenerator.Dispose();
-#endif
+		SetKeepScreenOn(false);
 
         base.OnDisappearing();
     }
@@ -107,6 +110,10 @@ public partial class TimerPage : ContentPage
 		CancellationToken cancellationToken = _timerCancellation.Token;
 		_isTimerRunning = true;
 		_isPaused = false;
+		SetKeepScreenOn(true);
+#if ANDROID
+		MainActivity.SetTimerLockScreenMode(true);
+#endif
 		SetPauseButtonText("Pause");
 
 		try
@@ -146,9 +153,30 @@ public partial class TimerPage : ContentPage
 		finally
 		{
 			_isTimerRunning = false;
+			SetKeepScreenOn(false);
+
+#if ANDROID
+			MainActivity.SetTimerLockScreenMode(false);
+#endif
+			_timerCancellation?.Dispose();
+			_timerCancellation = null;
 #if ANDROID
 			StopAndroidForegroundTimerNotification();
+			_toneGenerator.Release();
+			_toneGenerator.Dispose();
 #endif
+		}
+	}
+
+	private void SetKeepScreenOn(bool keepScreenOn)
+	{
+		try
+		{
+			DeviceDisplay.Current.KeepScreenOn = keepScreenOn;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogDebug(ex, "Unable to change keep screen on setting.");
 		}
 	}
 

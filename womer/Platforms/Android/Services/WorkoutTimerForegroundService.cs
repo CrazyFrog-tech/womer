@@ -17,6 +17,8 @@ public sealed class WorkoutTimerForegroundService : Service
     private const string ExtraTime = "womer.extra.TIME";
     private const string ExtraSet = "womer.extra.SET";
 
+    private PowerManager.WakeLock? _wakeLock;
+
     public override IBinder? OnBind(Intent? intent) => null;
 
     public static void StartOrUpdate(string phase, string time, string setLabel)
@@ -48,6 +50,8 @@ public sealed class WorkoutTimerForegroundService : Service
 
         if (intent?.Action == ActionStop)
         {
+            ReleaseWakeLock();
+
             if (OperatingSystem.IsAndroidVersionAtLeast(24))
             {
                 StopForeground(StopForegroundFlags.Remove);
@@ -68,8 +72,15 @@ public sealed class WorkoutTimerForegroundService : Service
 
         Notification notification = BuildNotification(phase, time, set);
         StartForeground(NotificationId, notification);
+        AcquireWakeLock();
 
         return StartCommandResult.NotSticky;
+    }
+
+    public override void OnDestroy()
+    {
+        ReleaseWakeLock();
+        base.OnDestroy();
     }
 
     private Notification BuildNotification(string phase, string time, string set)
@@ -121,5 +132,26 @@ public sealed class WorkoutTimerForegroundService : Service
         };
 
         manager.CreateNotificationChannel(channel);
+    }
+
+    private void AcquireWakeLock()
+    {
+        var powerManager = GetSystemService(PowerService) as PowerManager;
+        if (powerManager is null)
+            return;
+
+        _wakeLock ??= powerManager.NewWakeLock(WakeLockFlags.Partial, $"{PackageName}:WorkoutTimerWakeLock");
+        if (_wakeLock.IsHeld)
+            return;
+
+        _wakeLock.Acquire();
+    }
+
+    private void ReleaseWakeLock()
+    {
+        if (_wakeLock?.IsHeld != true)
+            return;
+
+        _wakeLock.Release();
     }
 }
