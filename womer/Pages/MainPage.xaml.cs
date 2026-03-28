@@ -6,6 +6,8 @@ namespace womer
 {
     public partial class MainPage : ContentPage
     {
+        private const string InitialPermissionsRequestedKey = "MainPage.InitialPermissionsRequested";
+
         private readonly IWorkoutService? _workoutService;
         private readonly int _minSeconds = 1;
         private readonly int _minSets = 1;
@@ -13,6 +15,7 @@ namespace womer
         private readonly Label? _restSecondsErrorLabel;
         private readonly Label? _setsErrorLabel;
         private readonly ILogger<MainPage> _logger;
+        private bool _isRequestingInitialPermissions;
 
         public MainPage()
         {
@@ -55,6 +58,44 @@ namespace womer
             catch (InvalidOperationException e)
             {
                 _logger.LogError(e, "Failed to initialize MainPage.");
+            }
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await RequestInitialPermissionsAsync();
+        }
+
+        private async Task RequestInitialPermissionsAsync()
+        {
+            if (_isRequestingInitialPermissions)
+                return;
+
+            if (Preferences.Default.Get(InitialPermissionsRequestedKey, false))
+                return;
+
+            _isRequestingInitialPermissions = true;
+
+            try
+            {
+#if ANDROID
+                if (OperatingSystem.IsAndroidVersionAtLeast(33))
+                {
+                    PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
+                    if (status != PermissionStatus.Granted)
+                        await Permissions.RequestAsync<Permissions.PostNotifications>();
+                }
+#endif
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Unable to request initial app permissions.");
+            }
+            finally
+            {
+                Preferences.Default.Set(InitialPermissionsRequestedKey, true);
+                _isRequestingInitialPermissions = false;
             }
         }
 
@@ -133,7 +174,7 @@ namespace womer
 
         private bool TrySetWorkSeconds()
         {
-            if ((!TryParseEntry(WorkSecondsEntry, out int seconds) || seconds < _minSeconds) && (!TryParseEntry(WorkMinutesEntry, out int minutes) || minutes < 1))
+            if ((!TryParseEntry(WorkSecondsEntry, out int seconds) || seconds < _minSeconds) don && (!TryParseEntry(WorkMinutesEntry, out int minutes) || minutes < 1))
             {
                 ShowError(_workSecondsErrorLabel, $"Seconds must be at least {_minSeconds}.");
                 WorkSecondsEntry.Text = string.Empty;
