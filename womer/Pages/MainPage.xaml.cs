@@ -133,7 +133,7 @@ namespace womer
 
         private bool TrySetWorkSeconds()
         {
-            if (!TryParseEntry(WorkSecondsEntry, out int seconds) || seconds < _minSeconds)
+            if ((!TryParseEntry(WorkSecondsEntry, out int seconds) || seconds < _minSeconds) && (!TryParseEntry(WorkMinutesEntry, out int minutes) || minutes < 1))
             {
                 ShowError(_workSecondsErrorLabel, $"Seconds must be at least {_minSeconds}.");
                 WorkSecondsEntry.Text = string.Empty;

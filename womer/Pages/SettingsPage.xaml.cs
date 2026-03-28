@@ -52,6 +52,7 @@ public partial class SettingsPage : ContentPage
     {
         VolumeValueLabel.Text = $"Volume: {(int)(volume * 100)}%";
     }
+
     private async void BuyMeCoffeeButton_Clicked(object sender, EventArgs e)
     {
         await Browser.Default.OpenAsync(BuyMeCoffeeUrl, BrowserLaunchMode.SystemPreferred);
@@ -71,8 +72,8 @@ public partial class SettingsPage : ContentPage
         if (audioManager == null)
             return false;
 
-        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Notification);
-        int current = audioManager.GetStreamVolume(Android.Media.Stream.Notification);
+        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Music);
+        int current = audioManager.GetStreamVolume(Android.Media.Stream.Music);
 
         if (max <= 0)
             return false;
@@ -91,12 +92,12 @@ public partial class SettingsPage : ContentPage
         if (audioManager == null)
             return;
 
-        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Notification);
+        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Music);
         if (max <= 0)
             return;
 
         int target = (int)Math.Round(Math.Clamp(normalizedVolume, 0, 1) * max);
-        audioManager.SetStreamVolume(Android.Media.Stream.Notification, target, VolumeNotificationFlags.PlaySound);
+        audioManager.SetStreamVolume(Android.Media.Stream.Music, target, 0);
 #endif
     }
 }

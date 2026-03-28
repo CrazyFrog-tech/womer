@@ -14,12 +14,13 @@ namespace womer;
 public partial class TimerPage : ContentPage
 {
 #if ANDROID
-    private readonly ToneGenerator _toneGenerator = new(Android.Media.Stream.Notification, 70);
+    private readonly ToneGenerator _toneGenerator = new(Android.Media.Stream.Music, 100);
 #endif
 
     private readonly Color _workBackgroundColor;
 	private readonly Color _restBackgroundColor;
 	private readonly Color _foregroundColor;
+	private readonly Color _prepBackgroundColor = Colors.Red;
 
 	private readonly CountdownRingDrawable _ringDrawable = new();
 	private readonly IWorkoutService? _workoutService;
@@ -34,6 +35,7 @@ public partial class TimerPage : ContentPage
 	private int _totalWorkSeconds;
 	private int _totalRestSeconds;
 	private int _totalSets;
+	private const int PreparationPhaseSeconds = 5;
 
 	public TimerPage()
 	{
@@ -109,6 +111,8 @@ public partial class TimerPage : ContentPage
 
 		try
 		{
+			await RunPreparationPhaseAsync(PreparationPhaseSeconds, cancellationToken);
+
 			for (int set = 1; set <= _totalSets; set++)
 			{
 				await RunPhaseAsync(set, _totalSets, _totalWorkSeconds, isWorkPhase: true, cancellationToken);
@@ -219,6 +223,30 @@ public partial class TimerPage : ContentPage
 		return _totalWorkSeconds > 0;
 	}
 
+	private async Task RunPreparationPhaseAsync(int durationSeconds, CancellationToken cancellationToken)
+	{
+		for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
+		{
+			await WaitWhilePausedAsync(cancellationToken);
+
+			cancellationToken.ThrowIfCancellationRequested();
+			double progress = durationSeconds == 0
+				? 0
+				: (double)secondsRemaining / durationSeconds;
+
+			UpdateTimerDisplay("READY", _prepBackgroundColor, 1, _totalSets, secondsRemaining, progress);
+
+			if (secondsRemaining > 0)
+			{
+				PlayTickCue();
+				await DelayOneSecondWithPauseAsync(cancellationToken);
+				continue;
+			}
+
+			PlayStartingWhistleCue();
+		}
+	}
+
 	private async Task RunPhaseAsync(int currentSet, int totalSets, int durationSeconds, bool isWorkPhase, CancellationToken cancellationToken)
 	{
 		const double ringOffset = 0.95;
@@ -234,9 +262,9 @@ public partial class TimerPage : ContentPage
                 ? 0
 				: (double)adjustedRemaining / durationSeconds;
 
-            UpdateTimerDisplay(currentSet, totalSets, secondsRemaining, progress, isWorkPhase);
+			UpdateTimerDisplay(isWorkPhase ? "WORK" : "REST", isWorkPhase ? _workBackgroundColor : _restBackgroundColor, currentSet, totalSets, secondsRemaining, progress);
 
-            if (secondsRemaining is > 0 and < 4)
+            if (secondsRemaining is > 0 and < 5)
                 PlayTickCue();
 
             if (secondsRemaining == 0)
@@ -281,10 +309,10 @@ public partial class TimerPage : ContentPage
 	}
 	
 
-	private void UpdateTimerDisplay(int currentSet, int totalSets, int secondsRemaining, double progress, bool isWorkPhase)
+	private void UpdateTimerDisplay(string phaseText, Color backgroundColor, int currentSet, int totalSets, int secondsRemaining, double progress)
 	{
-		BackgroundColor = isWorkPhase ? _workBackgroundColor : _restBackgroundColor;
-		PhaseLabel.Text = isWorkPhase ? "WORK" : "REST";
+		BackgroundColor = backgroundColor;
+		PhaseLabel.Text = phaseText;
 		SetLabel.Text = $"{currentSet}/{totalSets}";
 
 		TimeSpan time = TimeSpan.FromSeconds(secondsRemaining);
@@ -295,7 +323,7 @@ public partial class TimerPage : ContentPage
 		RingView.Invalidate();
 
 #if ANDROID
-		UpdateAndroidForegroundTimerNotification(currentSet, totalSets, secondsRemaining, isWorkPhase);
+		UpdateAndroidForegroundTimerNotification(phaseText, currentSet, totalSets, secondsRemaining);
 #endif
 	}
 
@@ -317,14 +345,13 @@ public partial class TimerPage : ContentPage
         }
     }
 
-    private void UpdateAndroidForegroundTimerNotification(int currentSet, int totalSets, int secondsRemaining, bool isWorkPhase)
+	private void UpdateAndroidForegroundTimerNotification(string phaseText, int currentSet, int totalSets, int secondsRemaining)
     {
-        string phase = isWorkPhase ? "WORK" : "REST";
         TimeSpan time = TimeSpan.FromSeconds(secondsRemaining);
         string text = $"{time.Minutes:D2}:{time.Seconds:D2}";
         string setLabel = $"{currentSet}/{totalSets}";
 
-        WorkoutTimerForegroundService.StartOrUpdate(phase, text, setLabel);
+		WorkoutTimerForegroundService.StartOrUpdate(phaseText, text, setLabel);
     }
 
     private static void StopAndroidForegroundTimerNotification()
@@ -341,14 +368,17 @@ public partial class TimerPage : ContentPage
 
 	private async void CancelButton_Clicked(object? sender, EventArgs e)
 	{
-		if (_isNavigatingBack)
-			return;
+        if (_isNavigatingBack || _isExitConfirmationVisible)
+            return;
 
-		_isPaused = false;
-		SetPauseButtonText("Pause");
-		_timerCancellation?.Cancel();
-		await NavigateBackAsync();
-	}
+        if (_isTimerRunning)
+        {
+            await ConfirmExitWhileTimerRunningAsync();
+            return;
+        }
+
+        await NavigateBackAsync();
+    }
 
 	private void PauseButton_Clicked(object? sender, EventArgs e)
 	{
@@ -369,24 +399,32 @@ public partial class TimerPage : ContentPage
     private void PlayTickCue()
     {
 #if ANDROID
-        _toneGenerator.StartTone(Tone.SupBusy, 90);
+        _toneGenerator.StartTone(Tone.SupBusy, 250);
 #endif
     }
+
+	private void PlayStartingWhistleCue()
+	{
+#if ANDROID
+		_toneGenerator.StartTone(Tone.CdmaAbbrReorder, 500);
+#endif
+		Vibrate(500);
+	}
 
     private void PlayPhaseSwitchCue()
     {
 #if ANDROID
-        _toneGenerator.StartTone(Tone.CdmaAbbrReorder, 400);
+        _toneGenerator.StartTone(Tone.CdmaAbbrReorder, 700);
 #endif
-        Vibrate(150);
+        Vibrate(1000);
     }
 
     private void PlayWorkoutCompleteCue()
     {
 #if ANDROID
-        _toneGenerator.StartTone(Tone.CdmaAlertCallGuard, 900);
+        _toneGenerator.StartTone(Tone.CdmaAlertCallGuard, 1500);
 #endif
-        Vibrate(200);
+        Vibrate(1800);
     }
 
     private async Task PlayConfettiAsync()
