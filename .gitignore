@@ -5,6 +5,7 @@ AppPackages/
 BundleArtifacts/
 .vs/
 .vscode/
+.github/
 .idea/
 *.sln.iml
 *.user

@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="456" height="456" fill="#512BD4" />
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+	<!-- Background -->
+	<rect width="456" height="456" rx="96" fill="#121212"/>
+
+	<!-- Stopwatch body -->
+	<circle cx="228" cy="240" r="130"
+			fill="#1E1E1E"
+			stroke="#e1d816"
+			stroke-width="20"/>
+
+	<!-- Top button -->
+	<rect x="198" y="70" width="60" height="36" rx="12" fill="#e1d816"/>
+
+	<!-- Dumbbell (refined, centered, balanced) -->
+	<!-- Left plate -->
+	<rect x="150" y="205" width="24" height="70" rx="6" fill="#e1d816"/>
+	<rect x="178" y="215" width="18" height="50" rx="5" fill="#e1d816"/>
+
+	<!-- Handle -->
+	<rect x="196" y="232" width="64" height="16" rx="8" fill="#e1d816"/>
+
+	<!-- Right plate -->
+	<rect x="260" y="215" width="18" height="50" rx="5" fill="#e1d816"/>
+	<rect x="282" y="205" width="24" height="70" rx="6" fill="#e1d816"/>
 </svg>
