@@ -4,7 +4,11 @@ using Android.OS;
 
 namespace womer.Platforms.Android.Services;
 
-[Service(Enabled = true, Exported = false, ForegroundServiceType = global::Android.Content.PM.ForegroundService.TypeDataSync)]
+[Service(
+    Enabled = true,
+    Exported = false,
+    Name = "workout.timer.womer.WorkoutTimerForegroundService",
+    ForegroundServiceType = global::Android.Content.PM.ForegroundService.TypeSpecialUse)]
 public sealed class WorkoutTimerForegroundService : Service
 {
     private const string NotificationChannelId = "womer.timer.channel";

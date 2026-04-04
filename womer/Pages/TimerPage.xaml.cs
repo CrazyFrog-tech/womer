@@ -113,6 +113,7 @@ public partial class TimerPage : ContentPage
 		SetKeepScreenOn(true);
 #if ANDROID
 		MainActivity.SetTimerLockScreenMode(true);
+		UpdateAndroidForegroundTimerNotification("READY", 1, _totalSets, PreparationPhaseSeconds);
 #endif
 		SetPauseButtonText("Pause");
 
