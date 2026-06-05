@@ -1,22 +1,17 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using womer.Application.UseCases;
 using womer.Core.Interfaces;
+using womer.Core.Models;
 
 #if ANDROID
-using Android.Media;
 using Android.Content;
 using Android.OS;
-using womer.Platforms.Android.Services;
 #endif
 
 namespace womer;
 
 public partial class TimerPage : ContentPage
 {
-#if ANDROID
-    private readonly ToneGenerator _toneGenerator = new(Android.Media.Stream.Music, 100);
-#endif
-
     private readonly Color _workBackgroundColor;
 	private readonly Color _restBackgroundColor;
 	private readonly Color _foregroundColor;
@@ -24,7 +19,10 @@ public partial class TimerPage : ContentPage
 
 	private readonly CountdownRingDrawable _ringDrawable = new();
 	private readonly IWorkoutSettings? _workoutService;
+	private readonly LoadWorkoutPlanUseCase _loadWorkoutPlanUseCase;
 	private readonly ILogger<TimerPage> _logger;
+	private readonly ITimerNotificationService _timerNotificationService;
+	private readonly ITimerSoundService _timerSoundService;
 	private CancellationTokenSource? _timerCancellation;
 	private bool _timerStarted;
 	private bool _isTimerRunning;
@@ -37,19 +35,25 @@ public partial class TimerPage : ContentPage
 	private int _totalSets;
 	private const int PreparationPhaseSeconds = 5;
 
-	public TimerPage(IWorkoutSettings workoutService)
+	public TimerPage(
+		IWorkoutSettings workoutService,
+		LoadWorkoutPlanUseCase loadWorkoutPlanUseCase,
+		ILogger<TimerPage> logger,
+		ITimerNotificationService timerNotificationService,
+		ITimerSoundService timerSoundService)
 	{
 		InitializeComponent();
 		_workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
+		_loadWorkoutPlanUseCase = loadWorkoutPlanUseCase ?? throw new ArgumentNullException(nameof(loadWorkoutPlanUseCase));
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_timerNotificationService = timerNotificationService ?? throw new ArgumentNullException(nameof(timerNotificationService));
+		_timerSoundService = timerSoundService ?? throw new ArgumentNullException(nameof(timerSoundService));
 
 		if (FindByName("PauseButton") is Button pauseButton)
             pauseButton.Clicked += PauseButton_Clicked;
 
 		if (FindByName("CancelButton") is Button cancelButton)
 			cancelButton.Clicked += CancelButton_Clicked;
-
-		_logger = IPlatformApplication.Current?.Services.GetService<ILogger<TimerPage>>()
-			?? NullLogger<TimerPage>.Instance;
 
 		_workBackgroundColor = GetColor("Primary", Color.FromArgb("#E1D816"));
 		_restBackgroundColor = GetColor("RestGreen", Color.FromArgb("#66BB6A"));
@@ -71,9 +75,7 @@ public partial class TimerPage : ContentPage
 			if (_isTimerRunning)
 			{
 				SetKeepScreenOn(true);
-#if ANDROID
-				MainActivity.SetTimerLockScreenMode(true);
-#endif
+				_timerNotificationService.SetLockScreenMode(true);
 			}
 
 			return;
@@ -102,19 +104,22 @@ public partial class TimerPage : ContentPage
 			return;
 		}
 
-#if ANDROID
-		await EnsureAndroidNotificationPermissionAsync();
-#endif
+		try
+		{
+			await _timerNotificationService.EnsurePermissionAsync();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogDebug(ex, "Unable to request notification permission.");
+		}
 
 		_timerCancellation = new CancellationTokenSource();
 		CancellationToken cancellationToken = _timerCancellation.Token;
 		_isTimerRunning = true;
 		_isPaused = false;
 		SetKeepScreenOn(true);
-#if ANDROID
-		MainActivity.SetTimerLockScreenMode(true);
-		UpdateAndroidForegroundTimerNotification("READY", 1, _totalSets, PreparationPhaseSeconds);
-#endif
+		_timerNotificationService.SetLockScreenMode(true);
+		_timerNotificationService.StartOrUpdate("READY", 1, _totalSets, TimeSpan.FromSeconds(PreparationPhaseSeconds));
 		SetPauseButtonText("Pause");
 
 		try
@@ -155,17 +160,10 @@ public partial class TimerPage : ContentPage
 		{
 			_isTimerRunning = false;
 			SetKeepScreenOn(false);
-
-#if ANDROID
-			MainActivity.SetTimerLockScreenMode(false);
-#endif
+			_timerNotificationService.SetLockScreenMode(false);
 			_timerCancellation?.Dispose();
 			_timerCancellation = null;
-#if ANDROID
-			StopAndroidForegroundTimerNotification();
-			_toneGenerator.Release();
-			_toneGenerator.Dispose();
-#endif
+			_timerNotificationService.Stop();
 		}
 	}
 
@@ -234,7 +232,7 @@ public partial class TimerPage : ContentPage
 
 	private static Color GetColor(string key, Color fallback)
 	{
-		if (Application.Current?.Resources.TryGetValue(key, out object? value) == true && value is Color color)
+		if (Microsoft.Maui.Controls.Application.Current?.Resources.TryGetValue(key, out object? value) == true && value is Color color)
 			return color;
 
 		return fallback;
@@ -245,11 +243,12 @@ public partial class TimerPage : ContentPage
 		if (_workoutService is null)
 			return false;
 
-		_totalWorkSeconds = (_workoutService.WorkMinutes * 60) + _workoutService.WorkSeconds;
-		_totalRestSeconds = (_workoutService.RestMinutes * 60) + _workoutService.RestSeconds;
-		_totalSets = Math.Max(1, _workoutService.Sets);
+		WorkoutPlan plan = _loadWorkoutPlanUseCase.Execute();
+		_totalWorkSeconds = plan.TotalWorkSeconds;
+		_totalRestSeconds = plan.TotalRestSeconds;
+		_totalSets = plan.TotalSets;
 
-		return _totalWorkSeconds > 0;
+		return plan.IsValid;
 	}
 
 	private async Task RunPreparationPhaseAsync(int durationSeconds, CancellationToken cancellationToken)
@@ -350,44 +349,8 @@ public partial class TimerPage : ContentPage
 		_ringDrawable.RingProgress = Math.Clamp(progress, 0, 1);
 		_ringDrawable.RingColor = _foregroundColor;
 		RingView.Invalidate();
-
-#if ANDROID
-		UpdateAndroidForegroundTimerNotification(phaseText, currentSet, totalSets, secondsRemaining);
-#endif
+		_timerNotificationService.StartOrUpdate(phaseText, currentSet, totalSets, TimeSpan.FromSeconds(secondsRemaining));
 	}
-
-#if ANDROID
-    private async Task EnsureAndroidNotificationPermissionAsync()
-    {
-        try
-        {
-            if (!OperatingSystem.IsAndroidVersionAtLeast(33))
-                return;
-
-            var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
-            if (status != PermissionStatus.Granted)
-                await Permissions.RequestAsync<Permissions.PostNotifications>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "Unable to request notification permission.");
-        }
-    }
-
-	private void UpdateAndroidForegroundTimerNotification(string phaseText, int currentSet, int totalSets, int secondsRemaining)
-    {
-        TimeSpan time = TimeSpan.FromSeconds(secondsRemaining);
-        string text = $"{time.Minutes:D2}:{time.Seconds:D2}";
-        string setLabel = $"{currentSet}/{totalSets}";
-
-		WorkoutTimerForegroundService.StartOrUpdate(phaseText, text, setLabel);
-    }
-
-    private static void StopAndroidForegroundTimerNotification()
-    {
-        WorkoutTimerForegroundService.Stop();
-    }
-#endif
 
 	private void SetPauseButtonText(string text)
 	{
@@ -417,42 +380,32 @@ public partial class TimerPage : ContentPage
 		_isPaused = !_isPaused;
 		SetPauseButtonText(_isPaused ? "Resume" : "Pause");
 
-#if ANDROID
 		if (_isPaused)
-			WorkoutTimerForegroundService.StartOrUpdate("PAUSED", TimeLabel.Text ?? "00:00", SetLabel.Text ?? "1/1");
+			_timerNotificationService.StartOrUpdate("PAUSED", 1, 1, TimeSpan.TryParseExact(TimeLabel.Text ?? "00:00", "mm\\:ss", null, out var pausedTime) ? pausedTime : TimeSpan.Zero);
 		else
-			WorkoutTimerForegroundService.StartOrUpdate(PhaseLabel.Text ?? "WORK", TimeLabel.Text ?? "00:00", SetLabel.Text ?? "1/1");
-#endif
+			_timerNotificationService.StartOrUpdate(PhaseLabel.Text ?? "WORK", 1, 1, TimeSpan.TryParseExact(TimeLabel.Text ?? "00:00", "mm\\:ss", null, out var runningTime) ? runningTime : TimeSpan.Zero);
 	}
 
     private void PlayTickCue()
     {
-#if ANDROID
-        _toneGenerator.StartTone(Tone.SupBusy, 250);
-#endif
+		_timerSoundService.PlayTick();
     }
 
 	private void PlayStartingWhistleCue()
 	{
-#if ANDROID
-		_toneGenerator.StartTone(Tone.CdmaAbbrReorder, 500);
-#endif
+		_timerSoundService.PlayStartingWhistle();
 		Vibrate(500);
 	}
 
     private void PlayPhaseSwitchCue()
     {
-#if ANDROID
-        _toneGenerator.StartTone(Tone.CdmaAbbrReorder, 700);
-#endif
+		_timerSoundService.PlayPhaseSwitch();
         Vibrate(1000);
     }
 
     private void PlayWorkoutCompleteCue()
     {
-#if ANDROID
-        _toneGenerator.StartTone(Tone.CdmaAlertCallGuard, 1500);
-#endif
+		_timerSoundService.PlayWorkoutComplete();
         Vibrate(1800);
     }
 

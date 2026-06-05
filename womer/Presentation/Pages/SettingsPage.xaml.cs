@@ -1,34 +1,30 @@
 using womer.Core.Interfaces;
-
-#if ANDROID
-using Android.Content;
-using Android.Media;
-#endif
+using womer.Application.UseCases;
 
 namespace womer;
 
 public partial class SettingsPage : ContentPage
 {
     private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
-    private readonly IWorkoutSettings _settings;
+    private readonly SetVolumeUseCase _setVolumeUseCase;
+    private readonly GetInitialVolumeUseCase _getInitialVolumeUseCase;
     private bool _isInitializingVolume;
 
 
 
-    public SettingsPage(IWorkoutSettings settings)
+    public SettingsPage(SetVolumeUseCase setVolumeUseCase, GetInitialVolumeUseCase getInitialVolumeUseCase)
     {
         InitializeComponent();
-        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _setVolumeUseCase = setVolumeUseCase ?? throw new ArgumentNullException(nameof(setVolumeUseCase));
+        _getInitialVolumeUseCase = getInitialVolumeUseCase ?? throw new ArgumentNullException(nameof(getInitialVolumeUseCase));
 
-        double initialVolume = _settings.Volume;
-        if (TryGetSystemVolume(out double systemVolume))
-            initialVolume = systemVolume;
+        double initialVolume = _getInitialVolumeUseCase.Execute();
 
         _isInitializingVolume = true;
         VolumeSlider.Value = initialVolume;
         _isInitializingVolume = false;
 
-        _settings.Volume = initialVolume;
+        _setVolumeUseCase.Execute(initialVolume);
         UpdateVolumeLabel(initialVolume);
     }
 
@@ -37,8 +33,7 @@ public partial class SettingsPage : ContentPage
         if (_isInitializingVolume)
             return;
 
-        _settings.Volume = e.NewValue;
-        SetSystemVolume(e.NewValue);
+        _setVolumeUseCase.Execute(e.NewValue);
         UpdateVolumeLabel(e.NewValue);
     }
 
@@ -55,43 +50,5 @@ public partial class SettingsPage : ContentPage
     private async void BackButton_Clicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//MainPage");
-    }
-
-    private static bool TryGetSystemVolume(out double normalizedVolume)
-    {
-        normalizedVolume = 0;
-
-#if ANDROID
-        var audioManager = Android.App.Application.Context.GetSystemService(Context.AudioService) as AudioManager;
-        if (audioManager == null)
-            return false;
-
-        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Music);
-        int current = audioManager.GetStreamVolume(Android.Media.Stream.Music);
-
-        if (max <= 0)
-            return false;
-
-        normalizedVolume = (double)current / max;
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    private static void SetSystemVolume(double normalizedVolume)
-    {
-#if ANDROID
-        var audioManager = Android.App.Application.Context.GetSystemService(Context.AudioService) as AudioManager;
-        if (audioManager == null)
-            return;
-
-        int max = audioManager.GetStreamMaxVolume(Android.Media.Stream.Music);
-        if (max <= 0)
-            return;
-
-        int target = (int)Math.Round(Math.Clamp(normalizedVolume, 0, 1) * max);
-        audioManager.SetStreamVolume(Android.Media.Stream.Music, target, 0);
-#endif
     }
 }

@@ -2,19 +2,20 @@
 
 namespace womer
 {
-    public partial class App : Application
+    public partial class App : Microsoft.Maui.Controls.Application
     {
-        private readonly AppShell _appShell;
+        private readonly IServiceProvider _services;
 
-        public App(AppShell appShell)
+        public App(IServiceProvider services)
         {
             InitializeComponent();
-            _appShell = appShell;
+            _services = services;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(_appShell);
+            var appShell = _services.GetRequiredService<AppShell>();
+            return new Window(appShell);
         }
     }
 }

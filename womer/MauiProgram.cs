@@ -1,5 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using womer.Application.UseCases;
 using womer.Core.Interfaces;
+using womer.Infrastructure.Audio;
+using womer.Infrastructure.Device;
+using womer.Infrastructure.Notifications;
 using womer.Infrastructure.Services;
 
 namespace womer
@@ -17,6 +21,12 @@ namespace womer
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddSingleton<IWorkoutSettings, WorkoutService>();
+            builder.Services.AddSingleton<IAudioService, AudioService>();
+            builder.Services.AddSingleton<ITimerNotificationService, TimerNotificationService>();
+            builder.Services.AddSingleton<ITimerSoundService, TimerSoundService>();
+            builder.Services.AddTransient<GetInitialVolumeUseCase>();
+            builder.Services.AddTransient<SetVolumeUseCase>();
+            builder.Services.AddTransient<LoadWorkoutPlanUseCase>();
             builder.Services.AddSingleton<AppShell>();
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<SettingsPage>();

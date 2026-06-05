@@ -61,7 +61,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Include="Infrastructure\Platforms\Android\Resources\values\colors.xml" />
+	  <AndroidResource Include="Platforms\Android\Resources\values\colors.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -85,8 +85,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Core\Models\" />
-	  <Folder Include="Application\" />
 	  <Folder Include="Resources\Sounds\" />
 	</ItemGroup>
 

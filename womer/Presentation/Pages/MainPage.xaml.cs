@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using womer.Core.Interfaces;
 
 namespace womer
@@ -17,10 +16,11 @@ namespace womer
         private readonly ILogger<MainPage> _logger;
         private bool _isRequestingInitialPermissions;
 
-        public MainPage(IWorkoutSettings workoutService)
+        public MainPage(IWorkoutSettings workoutService, ILogger<MainPage> logger)
         {
             InitializeComponent();
             _workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += async (s, e) =>
@@ -37,9 +37,6 @@ namespace womer
                 }
             };
             this.Content.GestureRecognizers.Add(tapGesture);
-
-            _logger = IPlatformApplication.Current?.Services.GetService<ILogger<MainPage>>()
-                ?? NullLogger<MainPage>.Instance;
 
             try {
                 _workSecondsErrorLabel = FindByName("WorkSecondsErrorLabel") as Label
