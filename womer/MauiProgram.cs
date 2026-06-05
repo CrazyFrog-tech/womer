@@ -17,6 +17,11 @@ namespace womer
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddSingleton<IWorkoutSettings, WorkoutService>();
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddTransient<TimerPage>();
+
 
 
 #if DEBUG

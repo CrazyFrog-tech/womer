@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using womer.Services;
+using womer.Core.Interfaces;
 
 namespace womer
 {
@@ -8,7 +8,7 @@ namespace womer
     {
         private const string InitialPermissionsRequestedKey = "MainPage.InitialPermissionsRequested";
 
-        private readonly IWorkoutService? _workoutService;
+        private readonly IWorkoutSettings? _workoutService;
         private readonly int _minSeconds = 1;
         private readonly int _minSets = 1;
         private readonly Label? _workSecondsErrorLabel;
@@ -17,9 +17,10 @@ namespace womer
         private readonly ILogger<MainPage> _logger;
         private bool _isRequestingInitialPermissions;
 
-        public MainPage()
+        public MainPage(IWorkoutSettings workoutService)
         {
             InitializeComponent();
+            _workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
 
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += async (s, e) =>
@@ -51,9 +52,6 @@ namespace womer
                 if (IPlatformApplication.Current == null)
                     throw new InvalidOperationException("Platform application is not initialized.");
 
-                _workoutService = IPlatformApplication.Current.Services.GetRequiredService<IWorkoutService>();
-                if (_workoutService == null)
-                    throw new InvalidOperationException("Workout service not available.");
             }
             catch (InvalidOperationException e)
             {

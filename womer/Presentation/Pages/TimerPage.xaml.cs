@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using womer.Services;
+using womer.Core.Interfaces;
+
 #if ANDROID
 using Android.Media;
 using Android.Content;
@@ -23,7 +23,7 @@ public partial class TimerPage : ContentPage
 	private readonly Color _prepBackgroundColor = Colors.Red;
 
 	private readonly CountdownRingDrawable _ringDrawable = new();
-	private readonly IWorkoutService? _workoutService;
+	private readonly IWorkoutSettings? _workoutService;
 	private readonly ILogger<TimerPage> _logger;
 	private CancellationTokenSource? _timerCancellation;
 	private bool _timerStarted;
@@ -37,9 +37,10 @@ public partial class TimerPage : ContentPage
 	private int _totalSets;
 	private const int PreparationPhaseSeconds = 5;
 
-	public TimerPage()
+	public TimerPage(IWorkoutSettings workoutService)
 	{
 		InitializeComponent();
+		_workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
 
 		if (FindByName("PauseButton") is Button pauseButton)
             pauseButton.Clicked += PauseButton_Clicked;
@@ -56,7 +57,6 @@ public partial class TimerPage : ContentPage
 
 		_ringDrawable.RingColor = _foregroundColor;
 		RingView.Drawable = _ringDrawable;
-		_workoutService = IPlatformApplication.Current?.Services.GetService<IWorkoutService>();
 	}
 
 	protected override async void OnAppearing()

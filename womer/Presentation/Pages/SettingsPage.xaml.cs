@@ -1,5 +1,3 @@
-using Microsoft.Maui.Storage;
-using womer.Services;
 using womer.Core.Interfaces;
 
 #if ANDROID
@@ -17,16 +15,10 @@ public partial class SettingsPage : ContentPage
 
 
 
-    public SettingsPage()
+    public SettingsPage(IWorkoutSettings settings)
     {
         InitializeComponent();
-
-        if (IPlatformApplication.Current == null)
-            throw new InvalidOperationException("Platform application is not initialized.");
-
-        _settings = IPlatformApplication.Current.Services.GetRequiredService<IWorkoutSettings>();
-        if (_settings == null)
-            throw new InvalidOperationException("Settings service not available.");
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
         double initialVolume = _settings.Volume;
         if (TryGetSystemVolume(out double systemVolume))
