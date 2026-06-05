@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using womer.Core.Interfaces;
 
-namespace womer.Services
+namespace womer.Infrastructure.Services
 {
-    public interface IWorkoutService
-    {
-        double Volume { get; set; }
-        int WorkMinutes { get; set; }
-        int WorkSeconds { get; set; }
-        int RestMinutes { get; set; }
-        int RestSeconds { get; set; }
-        int Sets { get; set; }
-    }
-
-    public sealed class WorkoutService : IWorkoutService
+    public sealed class WorkoutService : IWorkoutSettings
     {
         private const string VolumeKey = "Volume";
         private const string WorkMinutesKey = "WorkMinutes";

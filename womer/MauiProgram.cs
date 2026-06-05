@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using womer.Services;
+using womer.Core.Interfaces;
+using womer.Infrastructure.Services;
 
 namespace womer
 {
@@ -15,7 +16,7 @@ namespace womer
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
+            builder.Services.AddSingleton<IWorkoutSettings, WorkoutService>();
 
 
 #if DEBUG

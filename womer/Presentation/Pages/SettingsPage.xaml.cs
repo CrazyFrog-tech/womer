@@ -1,5 +1,7 @@
 using Microsoft.Maui.Storage;
 using womer.Services;
+using womer.Core.Interfaces;
+
 #if ANDROID
 using Android.Content;
 using Android.Media;
@@ -10,7 +12,7 @@ namespace womer;
 public partial class SettingsPage : ContentPage
 {
     private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
-    private readonly IWorkoutService _settings;
+    private readonly IWorkoutSettings _settings;
     private bool _isInitializingVolume;
 
 
@@ -22,7 +24,7 @@ public partial class SettingsPage : ContentPage
         if (IPlatformApplication.Current == null)
             throw new InvalidOperationException("Platform application is not initialized.");
 
-        _settings = IPlatformApplication.Current.Services.GetRequiredService<IWorkoutService>();
+        _settings = IPlatformApplication.Current.Services.GetRequiredService<IWorkoutSettings>();
         if (_settings == null)
             throw new InvalidOperationException("Settings service not available.");
 

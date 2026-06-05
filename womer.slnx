@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="womer/womer.csproj" />
+  <Project Path="womer/womer.csproj">
+    <Deploy Solution="Release|*" />
+  </Project>
 </Solution>
