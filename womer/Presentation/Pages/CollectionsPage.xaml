@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="womer.Presentation.Pages.CollectionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Collections"
+    BackgroundColor="{StaticResource Primary}">
+
+    <Grid
+        Padding="20"
+        RowDefinitions="*,Auto"
+        RowSpacing="16">
+
+        <!--  Collections list  -->
+        <CollectionView
+            x:Name="CollectionsView"
+            Grid.Row="0"
+            SelectionMode="None"
+            VerticalOptions="Fill">
+
+            <CollectionView.EmptyView>
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    HorizontalOptions="Center"
+                    Text="No collections yet."
+                    TextColor="{StaticResource Black}"
+                    VerticalOptions="Center" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Margin="0,0,0,12"
+                        Padding="16,14"
+                        BackgroundColor="{StaticResource Primary}"
+                        Stroke="{StaticResource Black}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="2">
+
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+
+                            <Label
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                FontSize="18"
+                                Text="{Binding Name}"
+                                TextColor="{StaticResource Black}"
+                                VerticalOptions="Center" />
+
+                            <Button
+                                Grid.Column="1"
+                                Padding="14,10"
+                                BackgroundColor="{StaticResource Black}"
+                                Clicked="PlayCollectionButton_Clicked"
+                                CommandParameter="{Binding Id}"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Text="▶"
+                                TextColor="{StaticResource Primary}" />
+
+                            <Button
+                                Grid.Column="2"
+                                Padding="14,10"
+                                BackgroundColor="{StaticResource Black}"
+                                Clicked="EditCollectionButton_Clicked"
+                                CommandParameter="{Binding Id}"
+                                CornerRadius="14"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Text="✏"
+                                TextColor="{StaticResource Primary}" />
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <!--  Bottom action buttons  -->
+        <Grid
+            Grid.Row="1"
+            Margin="0,0,0,16"
+            ColumnDefinitions="*,*"
+            ColumnSpacing="16">
+
+            <Button
+                Grid.Column="0"
+                Padding="0,14"
+                BackgroundColor="{StaticResource Black}"
+                Clicked="AddNewButton_Clicked"
+                CornerRadius="14"
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalOptions="Fill"
+                Text="Add New"
+                TextColor="{StaticResource Primary}" />
+
+            <Button
+                Grid.Column="1"
+                Padding="0,14"
+                BackgroundColor="{StaticResource Black}"
+                Clicked="PlayAllButton_Clicked"
+                CornerRadius="14"
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalOptions="Fill"
+                Text="Play All"
+                TextColor="{StaticResource Primary}" />
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

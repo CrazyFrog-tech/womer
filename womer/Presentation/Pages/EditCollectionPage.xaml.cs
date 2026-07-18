@@ -1,26 +1,29 @@
 ﻿using Microsoft.Extensions.Logging;
-using womer.Core.Interfaces;
+using womer.Application.UseCases.WorkoutCollectionUseCases;
+using womer.Core.Models;
 
-namespace womer
+namespace womer.Presentation.Pages
 {
-    public partial class MainPage : ContentPage
+    public partial class EditCollectionPage : ContentPage
     {
-        private const string InitialPermissionsRequestedKey = "MainPage.InitialPermissionsRequested";
+        private const string InitialPermissionsRequestedKey = "EditCollectionPage.InitialPermissionsRequested";
 
-        private readonly IWorkoutSettings? _workoutService;
         private readonly int _minSeconds = 1;
         private readonly int _minSets = 1;
         private readonly Label? _workSecondsErrorLabel;
         private readonly Label? _restSecondsErrorLabel;
         private readonly Label? _setsErrorLabel;
-        private readonly ILogger<MainPage> _logger;
+        private readonly ILogger<EditCollectionPage> _logger;
+        private readonly SaveWorkoutCollectionUseCase _saveWorkoutCollectionUseCase;
         private bool _isRequestingInitialPermissions;
+        private string CollectionName => CollectionNameEntry?.Text?.Trim() ?? string.Empty;
 
-        public MainPage(IWorkoutSettings workoutService, ILogger<MainPage> logger)
+        public EditCollectionPage(SaveWorkoutCollectionUseCase saveWorkoutCollectionUseCase, ILogger<EditCollectionPage> logger)
         {
             InitializeComponent();
-            _workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _saveWorkoutCollectionUseCase = saveWorkoutCollectionUseCase ?? throw new ArgumentNullException(nameof(saveWorkoutCollectionUseCase));
+
 
             var tapGesture = new TapGestureRecognizer();
             tapGesture.Tapped += async (s, e) =>
@@ -56,6 +59,121 @@ namespace womer
             }
         }
 
+        private async void SaveButton_Clicked(object sender, EventArgs e)
+        {
+            ClearValidationErrors();
+
+            if (string.IsNullOrWhiteSpace(CollectionName))
+            {
+                await DisplayAlertAsync("Validation", "Collection name is required.", "OK");
+                return;
+            }
+
+            int workMinutes = ParseEntryOrDefault(WorkMinutesEntry);
+            int workSeconds = ParseEntryOrDefault(WorkSecondsEntry);
+            int restMinutes = ParseEntryOrDefault(RestMinutesEntry);
+            int restSeconds = ParseEntryOrDefault(RestSecondsEntry);
+            int sets = ParseEntryOrDefault(NumberOfSetsEntry);
+
+            bool hasErrors = false;
+
+            if ((workMinutes * 60) + workSeconds < _minSeconds)
+            {
+                ShowError(_workSecondsErrorLabel, "Work time must be at least 1 second.");
+                hasErrors = true;
+            }
+
+            if ((restMinutes * 60) + restSeconds < 0)
+            {
+                ShowError(_restSecondsErrorLabel, "Rest time is invalid.");
+                hasErrors = true;
+            }
+
+            if (sets < _minSets)
+            {
+                ShowError(_setsErrorLabel, "Sets must be at least 1.");
+                hasErrors = true;
+            }
+
+            if (hasErrors)
+                return;
+
+            var collection = new WorkoutCollection
+            {
+                Name = CollectionName,
+                WorkMinutes = workMinutes,
+                WorkSeconds = workSeconds,
+                RestMinutes = restMinutes,
+                RestSeconds = restSeconds,
+                Sets = sets
+            };
+
+            try
+            {
+                await _saveWorkoutCollectionUseCase.ExecuteAsync(collection);
+                await DisplayAlertAsync("Saved", "Collection saved successfully.", "OK");
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save workout collection.");
+                await DisplayAlertAsync("Error", "Could not save collection.", "OK");
+            }
+
+        }
+
+        private async void CancelButton_Clicked(object sender, EventArgs e)
+        {
+            ClearValidationErrors();
+
+            if (Shell.Current?.Navigation.NavigationStack.Count > 1)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            CollectionNameEntry.Text = string.Empty;
+            WorkMinutesEntry.Text = string.Empty;
+            WorkSecondsEntry.Text = string.Empty;
+            RestMinutesEntry.Text = string.Empty;
+            RestSecondsEntry.Text = string.Empty;
+            NumberOfSetsEntry.Text = string.Empty;
+        }
+
+        private static int ParseEntryOrDefault(Entry? entry)
+        {
+            return int.TryParse(entry?.Text, out int value) ? value : 0;
+        }
+
+        private static void ShowError(Label? label, string message)
+        {
+            if (label is null)
+                return;
+
+            label.Text = message;
+            label.IsVisible = true;
+        }
+
+        private void ClearValidationErrors()
+        {
+            if (_workSecondsErrorLabel is not null)
+            {
+                _workSecondsErrorLabel.Text = string.Empty;
+                _workSecondsErrorLabel.IsVisible = false;
+            }
+
+            if (_restSecondsErrorLabel is not null)
+            {
+                _restSecondsErrorLabel.Text = string.Empty;
+                _restSecondsErrorLabel.IsVisible = false;
+            }
+
+            if (_setsErrorLabel is not null)
+            {
+                _setsErrorLabel.Text = string.Empty;
+                _setsErrorLabel.IsVisible = false;
+            }
+        }
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -121,89 +239,6 @@ namespace womer
                 entry.Text = string.Empty;
         }
 
-        private async void  ClearButton_Clicked(object sender, EventArgs e)
-        {
-            bool confirm = await DisplayAlertAsync("Confirm", "Are you sure you want to clear all fields?", "Yes", "No");
-            if (confirm)
-            {
-                WorkMinutesEntry.Text = string.Empty;
-                WorkSecondsEntry.Text = string.Empty;
-                RestMinutesEntry.Text = string.Empty;
-                RestSecondsEntry.Text = string.Empty;
-                NumberOfSetsEntry.Text = string.Empty;
-                ClearValidationErrors();
-            }
-        }
-        private async void StartButton_Clicked(object sender, EventArgs e)
-        {
-            ClearValidationErrors();
-
-            NormalizeWorkTimeInputs();
-            NormalizeRestTimeInputs();
-
-            _workoutService.WorkMinutes = ParseEntryOrDefault(WorkMinutesEntry);
-            _workoutService.RestMinutes = ParseEntryOrDefault(RestMinutesEntry);
-            _workoutService.RestSeconds = ParseEntryOrDefault(RestSecondsEntry);
-
-            bool hasErrors = !TrySetWorkSeconds() | !TrySetSets();
-            if (hasErrors)
-                return;
-
-            await Shell.Current.GoToAsync("TimerPage");
-        }
-
-        private void NormalizeWorkTimeInputs()
-        {
-            if (!string.IsNullOrWhiteSpace(WorkSecondsEntry.Text) && string.IsNullOrWhiteSpace(WorkMinutesEntry.Text))
-                WorkMinutesEntry.Text = "00";
-        }
-
-        private void NormalizeRestTimeInputs()
-        {
-            if (string.IsNullOrWhiteSpace(RestMinutesEntry.Text) && string.IsNullOrWhiteSpace(RestSecondsEntry.Text))
-            {
-                RestMinutesEntry.Text = "00";
-                RestSecondsEntry.Text = "00";
-            }
-        }
-
-        private bool TrySetWorkSeconds()
-        {
-            if ((!TryParseEntry(WorkSecondsEntry, out int seconds) || seconds < _minSeconds) && (!TryParseEntry(WorkMinutesEntry, out int minutes) || minutes < 1))
-            {
-                ShowError(_workSecondsErrorLabel, $"Seconds must be at least {_minSeconds}.");
-                WorkSecondsEntry.Text = string.Empty;
-                return false;
-            }
-
-            _workoutService.WorkSeconds = seconds;
-            return true;
-        }
-
-        private bool TrySetSets()
-        {
-            if (!TryParseEntry(NumberOfSetsEntry, out int sets) || sets < _minSets)
-            {
-                if(_setsErrorLabel != null)
-                ShowError(_setsErrorLabel, $"Sets must be at least {_minSets}.");
-                NumberOfSetsEntry.Text = string.Empty;
-                return false;
-            }
-
-            _workoutService?.Sets = sets;
-            return true;
-        }
-
-        private static int ParseEntryOrDefault(Entry entry, int fallback = 0)
-        {
-            return TryParseEntry(entry, out int value) ? value : fallback;
-        }
-
-        private static bool TryParseEntry(Entry entry, out int value)
-        {
-            return int.TryParse(entry.Text, out value);
-        }
-
         private static string NormalizeNumericInput(string? text, int maxLength, int maxValue)
         {
             string digits = new string((text ?? string.Empty).Where(char.IsDigit).ToArray());
@@ -221,22 +256,6 @@ namespace womer
         {
             if (entry.Text != text)
                 entry.Text = text;
-        }
-
-        private static void ShowError(Label label, string message)
-        {
-            label.Text = message;
-            label.IsVisible = true;
-        }
-
-        private void ClearValidationErrors()
-        {
-            if (_workSecondsErrorLabel != null)
-                _workSecondsErrorLabel.IsVisible = false;
-            if (_restSecondsErrorLabel != null)
-                _restSecondsErrorLabel.IsVisible = false;
-            if (_setsErrorLabel != null)
-                _setsErrorLabel.IsVisible = false;
         }
     }
 }

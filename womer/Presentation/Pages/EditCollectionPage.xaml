@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="womer.Presentation.Pages.EditCollectionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Workout Timer"
+    BackgroundColor="{StaticResource Primary}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="14" Spacing="10">
+
+            <!--  Collection Name  -->
+            <Border
+                Padding="12,10,12,8"
+                BackgroundColor="{StaticResource Primary}"
+                Stroke="{StaticResource Black}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="2">
+                <VerticalStackLayout Spacing="6">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="Collection Name"
+                        TextColor="{StaticResource Black}" />
+                    <Entry
+                        x:Name="CollectionNameEntry"
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        MaxLength="40"
+                        Placeholder="Enter name"
+                        PlaceholderColor="{StaticResource Gray600}"
+                        TextColor="{StaticResource Black}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!--  Work  -->
+            <Border
+                Padding="12,10,12,8"
+                BackgroundColor="{StaticResource Primary}"
+                Stroke="{StaticResource Black}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="2">
+                <VerticalStackLayout Spacing="6">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="Work"
+                        TextColor="{StaticResource Black}" />
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Entry
+                            x:Name="WorkMinutesEntry"
+                            Focused="TimeEntry_Focused"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="2"
+                            Placeholder="mm"
+                            PlaceholderColor="{StaticResource Gray600}"
+                            TextChanged="MinutesEntry_TextChanged"
+                            TextColor="{StaticResource Black}"
+                            WidthRequest="52" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            Text=":"
+                            TextColor="{StaticResource Black}"
+                            VerticalOptions="Center" />
+                        <Entry
+                            x:Name="WorkSecondsEntry"
+                            Focused="TimeEntry_Focused"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="2"
+                            Placeholder="ss"
+                            PlaceholderColor="{StaticResource Gray600}"
+                            TextChanged="SecondsEntry_TextChanged"
+                            TextColor="{StaticResource Black}"
+                            WidthRequest="52" />
+                    </HorizontalStackLayout>
+                    <Grid HeightRequest="16">
+                        <Label
+                            x:Name="WorkSecondsErrorLabel"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HorizontalOptions="Center"
+                            IsVisible="False"
+                            TextColor="Red"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!--  Rest  -->
+            <Border
+                Padding="12,10,12,8"
+                BackgroundColor="{StaticResource Black}"
+                Stroke="{StaticResource Secondary}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="2">
+                <VerticalStackLayout Spacing="6">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="Rest"
+                        TextColor="{StaticResource Primary}" />
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <Entry
+                            x:Name="RestMinutesEntry"
+                            Focused="TimeEntry_Focused"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="2"
+                            Placeholder="mm"
+                            PlaceholderColor="{StaticResource Secondary}"
+                            TextChanged="MinutesEntry_TextChanged"
+                            TextColor="{StaticResource Primary}"
+                            WidthRequest="52" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            Text=":"
+                            TextColor="{StaticResource Primary}"
+                            VerticalOptions="Center" />
+                        <Entry
+                            x:Name="RestSecondsEntry"
+                            Focused="TimeEntry_Focused"
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            MaxLength="2"
+                            Placeholder="ss"
+                            PlaceholderColor="{StaticResource Secondary}"
+                            TextChanged="SecondsEntry_TextChanged"
+                            TextColor="{StaticResource Primary}"
+                            WidthRequest="52" />
+                    </HorizontalStackLayout>
+                    <Grid HeightRequest="16">
+                        <Label
+                            x:Name="RestSecondsErrorLabel"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HorizontalOptions="Center"
+                            IsVisible="False"
+                            TextColor="Red"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!--  Sets  -->
+            <Border
+                Padding="12,10,12,8"
+                BackgroundColor="{StaticResource Primary}"
+                Stroke="{StaticResource Black}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="2">
+                <VerticalStackLayout Spacing="6">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="Sets"
+                        TextColor="{StaticResource Black}" />
+                    <Entry
+                        x:Name="NumberOfSetsEntry"
+                        Focused="TimeEntry_Focused"
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        Keyboard="Numeric"
+                        MaxLength="2"
+                        Placeholder="Sets"
+                        PlaceholderColor="{StaticResource Gray600}"
+                        TextChanged="NumberOfSetsEntry_TextChanged"
+                        TextColor="{StaticResource Black}"
+                        WidthRequest="68" />
+                    <Grid HeightRequest="16">
+                        <Label
+                            x:Name="SetsErrorLabel"
+                            FontAttributes="Bold"
+                            FontSize="11"
+                            HorizontalOptions="Center"
+                            IsVisible="False"
+                            TextColor="Red"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!--  Buttons  -->
+            <Grid
+                Margin="0,2,0,8"
+                ColumnDefinitions="*,*"
+                ColumnSpacing="10">
+                <Button
+                    Grid.Column="0"
+                    Padding="0,10"
+                    BackgroundColor="{StaticResource Black}"
+                    Clicked="CancelButton_Clicked"
+                    CornerRadius="14"
+                    FontAttributes="Bold"
+                    FontSize="17"
+                    Text="Cancel"
+                    TextColor="{StaticResource Primary}" />
+                <Button
+                    Grid.Column="1"
+                    Padding="0,10"
+                    BackgroundColor="{StaticResource Black}"
+                    Clicked="SaveButton_Clicked"
+                    CornerRadius="14"
+                    FontAttributes="Bold"
+                    FontSize="17"
+                    Text="Save"
+                    TextColor="{StaticResource Primary}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

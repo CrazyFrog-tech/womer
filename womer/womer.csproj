@@ -73,6 +73,9 @@
 	  <MauiXaml Update="NewPage1.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Presentation\Pages\CollectionsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Settings.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -86,6 +89,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\Sounds\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Presentation\Pages\EditCollectionPage.xaml.cs">
+	    <DependentUpon>EditCollectionPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

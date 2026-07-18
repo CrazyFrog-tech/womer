@@ -1,7 +1,7 @@
 using womer.Core.Interfaces;
 using womer.Application.UseCases;
 
-namespace womer;
+namespace womer.Presentation.Pages;
 
 public partial class SettingsPage : ContentPage
 {

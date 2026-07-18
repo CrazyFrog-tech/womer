@@ -1,55 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using womer.Core.Interfaces;
+﻿using womer.Core.Interfaces;
+using womer.Infrastructure.Settings;
 
 namespace womer.Infrastructure.Services
 {
     public sealed class WorkoutService : IWorkoutSettings
     {
-        private const string VolumeKey = "Volume";
-        private const string WorkMinutesKey = "WorkMinutes";
-        private const string WorkSecondsKey = "WorkSeconds";
-        private const string RestMinutesKey = "RestMinutes";
-        private const string RestSecondsKey = "RestSeconds";
-        private const string SetsKey = "Sets";
+        private readonly IPreferences _preferences;
 
-        private static IPreferences Preferences => Microsoft.Maui.Storage.Preferences.Default;
+        public WorkoutService(IPreferences preferences)
+        {
+            if (preferences == null)    throw new ArgumentNullException(nameof(preferences));
+            _preferences = preferences;
+        }
 
         public double Volume
         {
-            get => Preferences.Get(VolumeKey, 1.0);
-            set => Preferences.Set(VolumeKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.Volume, 1.0);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.Volume, value);
         }
 
         public int WorkMinutes
         {
-            get => Preferences.Get(WorkMinutesKey, 0);
-            set => Preferences.Set(WorkMinutesKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.WorkMinutes, 0);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.WorkMinutes, value);
         }
 
         public int WorkSeconds
         {
-            get => Preferences.Get(WorkSecondsKey, 10);
-            set => Preferences.Set(WorkSecondsKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.WorkSeconds, 10);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.WorkSeconds, value);
         }
 
         public int RestMinutes
         {
-            get => Preferences.Get(RestMinutesKey, 0);
-            set => Preferences.Set(RestMinutesKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.RestMinutes, 0);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.RestMinutes, value);
         }
 
         public int RestSeconds
         {
-            get => Preferences.Get(RestSecondsKey, 5);
-            set => Preferences.Set(RestSecondsKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.RestSeconds, 5);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.RestSeconds, value);
         }
 
         public int Sets
         {
-            get => Preferences.Get(SetsKey, 1);
-            set => Preferences.Set(SetsKey, value);
+            get => _preferences.Get(StorageKeys.WorkoutSettings.Sets, 1);
+            set => _preferences.Set(StorageKeys.WorkoutSettings.Sets, value);
         }
     }
 }

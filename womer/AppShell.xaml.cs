@@ -1,4 +1,6 @@
-﻿namespace womer
+﻿using womer.Presentation.Pages;
+
+namespace womer
 {
     public partial class AppShell : Shell
     {
@@ -7,6 +9,8 @@
             InitializeComponent();
             Routing.RegisterRoute("SettingsPage", typeof(SettingsPage));
             Routing.RegisterRoute("TimerPage", typeof(TimerPage));
+            Routing.RegisterRoute("EditCollectionPage", typeof(EditCollectionPage));
+            Routing.RegisterRoute("CollectionsPage", typeof(CollectionsPage));
             Navigated += OnNavigated;
         }
 

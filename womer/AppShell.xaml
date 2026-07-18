@@ -3,7 +3,7 @@
     x:Class="womer.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:womer"
+    xmlns:pages="clr-namespace:womer.Presentation.Pages"
     Title="womer"
     Shell.BackgroundColor="{StaticResource Primary}"
     Shell.FlyoutBehavior="Disabled">
@@ -16,8 +16,9 @@
             Priority="0"
             Text="Settings" />
     </Shell.ToolbarItems>
-    <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
-    <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" Route="SettingsPage" />
-    <ShellContent ContentTemplate="{DataTemplate local:TimerPage}" Route="TimerPage" />
+    <ShellContent ContentTemplate="{DataTemplate pages:CollectionsPage}" Route="CollectionsPage" />
+    <ShellContent ContentTemplate="{DataTemplate pages:EditCollectionPage}" Route="EditCollectionPage" />
+    <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" Route="SettingsPage" />
+    <ShellContent ContentTemplate="{DataTemplate pages:TimerPage}" Route="TimerPage" />
 
 </Shell>

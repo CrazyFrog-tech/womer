@@ -2,13 +2,17 @@ using Microsoft.Extensions.Logging;
 using womer.Application.UseCases;
 using womer.Core.Interfaces;
 using womer.Core.Models;
+using womer.Application.UseCases.WorkoutCollectionUseCases;
+
 
 #if ANDROID
 using Android.Content;
 using Android.OS;
 #endif
 
-namespace womer;
+namespace womer.Presentation.Pages;
+
+[QueryProperty(nameof(CollectionId), "collectionId")]
 
 public partial class TimerPage : ContentPage
 {
@@ -35,9 +39,17 @@ public partial class TimerPage : ContentPage
 	private int _totalSets;
 	private const int PreparationPhaseSeconds = 5;
 
-	public TimerPage(
+    private readonly ReadWorkoutCollectionUseCase _readWorkoutCollectionUseCase;
+    private readonly LoadWorkoutPlanFromWorkoutCollectionUseCase _loadWorkoutPlanFromCollectionUseCase;
+
+    public long CollectionId { get; set; }
+
+
+    public TimerPage(
 		IWorkoutSettings workoutService,
 		LoadWorkoutPlanUseCase loadWorkoutPlanUseCase,
+		ReadWorkoutCollectionUseCase readWorkoutCollectionUseCase,
+		LoadWorkoutPlanFromWorkoutCollectionUseCase loadWorkoutPlanFromCollectionUseCase,
 		ILogger<TimerPage> logger,
 		ITimerNotificationService timerNotificationService,
 		ITimerSoundService timerSoundService)
@@ -45,6 +57,8 @@ public partial class TimerPage : ContentPage
 		InitializeComponent();
 		_workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
 		_loadWorkoutPlanUseCase = loadWorkoutPlanUseCase ?? throw new ArgumentNullException(nameof(loadWorkoutPlanUseCase));
+		_readWorkoutCollectionUseCase = readWorkoutCollectionUseCase ?? throw new ArgumentNullException(nameof(readWorkoutCollectionUseCase));
+		_loadWorkoutPlanFromCollectionUseCase = loadWorkoutPlanFromCollectionUseCase ?? throw new ArgumentNullException(nameof(loadWorkoutPlanFromCollectionUseCase));
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_timerNotificationService = timerNotificationService ?? throw new ArgumentNullException(nameof(timerNotificationService));
 		_timerSoundService = timerSoundService ?? throw new ArgumentNullException(nameof(timerSoundService));
@@ -97,7 +111,7 @@ public partial class TimerPage : ContentPage
 
 	private async Task StartWorkoutTimerAsync()
 	{
-		if (!TryLoadWorkoutValues())
+		if (!await TryLoadWorkoutValuesAsync())
 		{
 			await DisplayAlertAsync("Timer", "Invalid workout values.", "OK");
 			await NavigateBackAsync();
@@ -238,18 +252,33 @@ public partial class TimerPage : ContentPage
 		return fallback;
 	}
 
-	private bool TryLoadWorkoutValues()
+	private async Task<bool> TryLoadWorkoutValuesAsync()
 	{
-		if (_workoutService is null)
-			return false;
+        WorkoutPlan plan;
+        if (CollectionId > 0)
+        {
+			WorkoutCollection? workoutCollection = await _readWorkoutCollectionUseCase.ExecuteAsync(CollectionId);
+            if (workoutCollection is null)
+            {
+                _logger.LogWarning("WorkoutCollection {Id} not found.", CollectionId);
+                return false;
+            }
+            plan = _loadWorkoutPlanFromCollectionUseCase.Execute(workoutCollection);
 
-		WorkoutPlan plan = _loadWorkoutPlanUseCase.Execute();
-		_totalWorkSeconds = plan.TotalWorkSeconds;
-		_totalRestSeconds = plan.TotalRestSeconds;
-		_totalSets = plan.TotalSets;
+        }
+        else
+        {
+            if (_workoutService is null)
+                return false;
 
-		return plan.IsValid;
-	}
+            plan = _loadWorkoutPlanUseCase.Execute();
+        }
+        _totalWorkSeconds = plan.TotalWorkSeconds;
+        _totalRestSeconds = plan.TotalRestSeconds;
+        _totalSets = plan.TotalSets;
+
+        return plan.IsValid;
+    }
 
 	private async Task RunPreparationPhaseAsync(int durationSeconds, CancellationToken cancellationToken)
 	{
