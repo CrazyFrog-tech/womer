@@ -13,6 +13,7 @@ using Android.OS;
 namespace womer.Presentation.Pages;
 
 [QueryProperty(nameof(CollectionId), "collectionId")]
+[QueryProperty(nameof(PlayAll), "playAll")]
 
 public partial class TimerPage : ContentPage
 {
@@ -27,6 +28,7 @@ public partial class TimerPage : ContentPage
 	private readonly ILogger<TimerPage> _logger;
 	private readonly ITimerNotificationService _timerNotificationService;
 	private readonly ITimerSoundService _timerSoundService;
+	private readonly INavigationService _navigationService;
 	private CancellationTokenSource? _timerCancellation;
 	private bool _timerStarted;
 	private bool _isTimerRunning;
@@ -38,30 +40,37 @@ public partial class TimerPage : ContentPage
 	private int _totalRestSeconds;
 	private int _totalSets;
 	private const int PreparationPhaseSeconds = 5;
+	private readonly List<WorkoutSession> _workoutSessions = [];
 
     private readonly ReadWorkoutCollectionUseCase _readWorkoutCollectionUseCase;
+	private readonly GetAllWorkoutCollectionsUseCase _getAllWorkoutCollectionsUseCase;
     private readonly LoadWorkoutPlanFromWorkoutCollectionUseCase _loadWorkoutPlanFromCollectionUseCase;
 
     public long CollectionId { get; set; }
+	public bool PlayAll { get; set; }
 
 
     public TimerPage(
 		IWorkoutSettings workoutService,
 		LoadWorkoutPlanUseCase loadWorkoutPlanUseCase,
+		GetAllWorkoutCollectionsUseCase getAllWorkoutCollectionsUseCase,
 		ReadWorkoutCollectionUseCase readWorkoutCollectionUseCase,
 		LoadWorkoutPlanFromWorkoutCollectionUseCase loadWorkoutPlanFromCollectionUseCase,
 		ILogger<TimerPage> logger,
 		ITimerNotificationService timerNotificationService,
-		ITimerSoundService timerSoundService)
+		ITimerSoundService timerSoundService,
+		INavigationService navigationService)
 	{
 		InitializeComponent();
 		_workoutService = workoutService ?? throw new ArgumentNullException(nameof(workoutService));
 		_loadWorkoutPlanUseCase = loadWorkoutPlanUseCase ?? throw new ArgumentNullException(nameof(loadWorkoutPlanUseCase));
+		_getAllWorkoutCollectionsUseCase = getAllWorkoutCollectionsUseCase ?? throw new ArgumentNullException(nameof(getAllWorkoutCollectionsUseCase));
 		_readWorkoutCollectionUseCase = readWorkoutCollectionUseCase ?? throw new ArgumentNullException(nameof(readWorkoutCollectionUseCase));
 		_loadWorkoutPlanFromCollectionUseCase = loadWorkoutPlanFromCollectionUseCase ?? throw new ArgumentNullException(nameof(loadWorkoutPlanFromCollectionUseCase));
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_timerNotificationService = timerNotificationService ?? throw new ArgumentNullException(nameof(timerNotificationService));
 		_timerSoundService = timerSoundService ?? throw new ArgumentNullException(nameof(timerSoundService));
+		_navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
 		if (FindByName("PauseButton") is Button pauseButton)
             pauseButton.Clicked += PauseButton_Clicked;
@@ -111,7 +120,7 @@ public partial class TimerPage : ContentPage
 
 	private async Task StartWorkoutTimerAsync()
 	{
-		if (!await TryLoadWorkoutValuesAsync())
+		if (!await TryLoadWorkoutSessionsAsync())
 		{
 			await DisplayAlertAsync("Timer", "Invalid workout values.", "OK");
 			await NavigateBackAsync();
@@ -133,31 +142,38 @@ public partial class TimerPage : ContentPage
 		_isPaused = false;
 		SetKeepScreenOn(true);
 		_timerNotificationService.SetLockScreenMode(true);
-		_timerNotificationService.StartOrUpdate("READY", 1, _totalSets, TimeSpan.FromSeconds(PreparationPhaseSeconds));
 		SetPauseButtonText("Pause");
 
 		try
 		{
-			await RunPreparationPhaseAsync(PreparationPhaseSeconds, cancellationToken);
-
-			for (int set = 1; set <= _totalSets; set++)
+			foreach (WorkoutSession workoutSession in _workoutSessions)
 			{
-				await RunPhaseAsync(set, _totalSets, _totalWorkSeconds, isWorkPhase: true, cancellationToken);
+				cancellationToken.ThrowIfCancellationRequested();
+				ApplyWorkoutSession(workoutSession);
+				_timerNotificationService.StartOrUpdate("READY", 1, _totalSets, TimeSpan.FromSeconds(PreparationPhaseSeconds));
 
-				if (cancellationToken.IsCancellationRequested)
-					return;
+				await RunPreparationPhaseAsync(PreparationPhaseSeconds, cancellationToken);
 
-				bool isLastSet = set == _totalSets;
-				if (!isLastSet && _totalRestSeconds > 0)
-					await RunPhaseAsync(set, _totalSets, _totalRestSeconds, isWorkPhase: false, cancellationToken);
+				for (int set = 1; set <= _totalSets; set++)
+				{
+					await RunPhaseAsync(set, _totalSets, _totalWorkSeconds, isWorkPhase: true, cancellationToken);
 
-				if (cancellationToken.IsCancellationRequested)
-					return;
+					if (cancellationToken.IsCancellationRequested)
+						return;
+
+					bool isLastSet = set == _totalSets;
+					if (!isLastSet && _totalRestSeconds > 0)
+						await RunPhaseAsync(set, _totalSets, _totalRestSeconds, isWorkPhase: false, cancellationToken);
+
+					if (cancellationToken.IsCancellationRequested)
+						return;
+				}
 			}
+
             PlayWorkoutCompleteCue();
             await PlayConfettiAsync();
 
-            await DisplayAlertAsync("Workout", "Workout complete.", "OK");
+			await DisplayAlertAsync("Workout", PlayAll ? "All collections complete." : "Workout complete.", "OK");
 			await NavigateBackAsync();
 		}
 		catch (TaskCanceledException)
@@ -220,7 +236,7 @@ public partial class TimerPage : ContentPage
 	private Task NavigateBackAsync()
 	{
 		_isNavigatingBack = true;
-		return Shell.Current.GoToAsync("..");
+		return _navigationService.GoToAsync("..");
 	}
 
 	private async void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
@@ -252,33 +268,76 @@ public partial class TimerPage : ContentPage
 		return fallback;
 	}
 
-	private async Task<bool> TryLoadWorkoutValuesAsync()
+	private async Task<bool> TryLoadWorkoutSessionsAsync()
 	{
-        WorkoutPlan plan;
-        if (CollectionId > 0)
-        {
+		_workoutSessions.Clear();
+
+		if (PlayAll)
+		{
+			IEnumerable<WorkoutCollection> collections = await _getAllWorkoutCollectionsUseCase.ExecuteAsync();
+			foreach (WorkoutCollection collection in collections.OrderBy(collection => collection.Name, StringComparer.OrdinalIgnoreCase))
+			{
+				WorkoutPlan collectionPlan = _loadWorkoutPlanFromCollectionUseCase.Execute(collection);
+				if (!collectionPlan.IsValid)
+				{
+					_logger.LogWarning("WorkoutCollection {Id} has invalid values and will be skipped.", collection.Id);
+					continue;
+				}
+
+				_workoutSessions.Add(new WorkoutSession(collection.Name, collectionPlan));
+			}
+
+			return _workoutSessions.Count > 0;
+		}
+
+		if (CollectionId > 0)
+		{
 			WorkoutCollection? workoutCollection = await _readWorkoutCollectionUseCase.ExecuteAsync(CollectionId);
-            if (workoutCollection is null)
-            {
-                _logger.LogWarning("WorkoutCollection {Id} not found.", CollectionId);
-                return false;
-            }
-            plan = _loadWorkoutPlanFromCollectionUseCase.Execute(workoutCollection);
+			if (workoutCollection is null)
+			{
+				_logger.LogWarning("WorkoutCollection {Id} not found.", CollectionId);
+				return false;
+			}
 
-        }
-        else
-        {
-            if (_workoutService is null)
-                return false;
+			WorkoutPlan collectionPlan = _loadWorkoutPlanFromCollectionUseCase.Execute(workoutCollection);
+			if (!collectionPlan.IsValid)
+				return false;
 
-            plan = _loadWorkoutPlanUseCase.Execute();
-        }
-        _totalWorkSeconds = plan.TotalWorkSeconds;
-        _totalRestSeconds = plan.TotalRestSeconds;
-        _totalSets = plan.TotalSets;
+			_workoutSessions.Add(new WorkoutSession(workoutCollection.Name, collectionPlan));
+			return true;
+		}
 
-        return plan.IsValid;
-    }
+		if (_workoutService is null)
+			return false;
+
+		WorkoutPlan workoutPlan = _loadWorkoutPlanUseCase.Execute();
+		if (!workoutPlan.IsValid)
+			return false;
+
+		_workoutSessions.Add(new WorkoutSession(null, workoutPlan));
+		return true;
+	}
+
+	private void ApplyWorkoutSession(WorkoutSession workoutSession)
+	{
+		_totalWorkSeconds = workoutSession.Plan.TotalWorkSeconds;
+		_totalRestSeconds = workoutSession.Plan.TotalRestSeconds;
+		_totalSets = workoutSession.Plan.TotalSets;
+		SetCollectionName(workoutSession.CollectionName);
+	}
+
+	private void SetCollectionName(string? collectionName)
+	{
+		if (string.IsNullOrWhiteSpace(collectionName))
+		{
+			CollectionNameLabel.Text = string.Empty;
+			CollectionNameLabel.IsVisible = false;
+			return;
+		}
+
+		CollectionNameLabel.Text = collectionName;
+		CollectionNameLabel.IsVisible = true;
+	}
 
 	private async Task RunPreparationPhaseAsync(int durationSeconds, CancellationToken cancellationToken)
 	{
@@ -550,6 +609,7 @@ public partial class TimerPage : ContentPage
         }
     }
 
+	private sealed record WorkoutSession(string? CollectionName, WorkoutPlan Plan);
 
     private sealed class CountdownRingDrawable : IDrawable
 	{

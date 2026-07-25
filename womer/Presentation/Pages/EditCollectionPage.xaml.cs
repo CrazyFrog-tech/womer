@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using womer.Application.UseCases.WorkoutCollectionUseCases;
+using womer.Core.Interfaces;
 using womer.Core.Models;
 
 namespace womer.Presentation.Pages
 {
+    [QueryProperty(nameof(CollectionId), "collectionId")]
     public partial class EditCollectionPage : ContentPage
     {
         private const string InitialPermissionsRequestedKey = "EditCollectionPage.InitialPermissionsRequested";
@@ -14,15 +16,30 @@ namespace womer.Presentation.Pages
         private readonly Label? _restSecondsErrorLabel;
         private readonly Label? _setsErrorLabel;
         private readonly ILogger<EditCollectionPage> _logger;
+        private readonly ReadWorkoutCollectionUseCase _readWorkoutCollectionUseCase;
         private readonly SaveWorkoutCollectionUseCase _saveWorkoutCollectionUseCase;
+        private readonly INavigationService _navigationService;
         private bool _isRequestingInitialPermissions;
+        private bool _isCollectionLoaded;
+        private long _collectionId;
         private string CollectionName => CollectionNameEntry?.Text?.Trim() ?? string.Empty;
 
-        public EditCollectionPage(SaveWorkoutCollectionUseCase saveWorkoutCollectionUseCase, ILogger<EditCollectionPage> logger)
+        public string CollectionId
+        {
+            set => _collectionId = long.TryParse(value, out long collectionId) ? collectionId : 0;
+        }
+
+        public EditCollectionPage(
+            ReadWorkoutCollectionUseCase readWorkoutCollectionUseCase,
+            SaveWorkoutCollectionUseCase saveWorkoutCollectionUseCase,
+            ILogger<EditCollectionPage> logger,
+            INavigationService navigationService)
         {
             InitializeComponent();
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _readWorkoutCollectionUseCase = readWorkoutCollectionUseCase ?? throw new ArgumentNullException(nameof(readWorkoutCollectionUseCase));
             _saveWorkoutCollectionUseCase = saveWorkoutCollectionUseCase ?? throw new ArgumentNullException(nameof(saveWorkoutCollectionUseCase));
+            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
 
             var tapGesture = new TapGestureRecognizer();
@@ -100,6 +117,7 @@ namespace womer.Presentation.Pages
 
             var collection = new WorkoutCollection
             {
+                Id = _collectionId,
                 Name = CollectionName,
                 WorkMinutes = workMinutes,
                 WorkSeconds = workSeconds,
@@ -112,7 +130,7 @@ namespace womer.Presentation.Pages
             {
                 await _saveWorkoutCollectionUseCase.ExecuteAsync(collection);
                 await DisplayAlertAsync("Saved", "Collection saved successfully.", "OK");
-                await Shell.Current.GoToAsync("..");
+                await _navigationService.GoToAsync("..");
             }
             catch (Exception ex)
             {
@@ -128,7 +146,7 @@ namespace womer.Presentation.Pages
 
             if (Shell.Current?.Navigation.NavigationStack.Count > 1)
             {
-                await Shell.Current.GoToAsync("..");
+                await _navigationService.GoToAsync("..");
                 return;
             }
 
@@ -178,6 +196,25 @@ namespace womer.Presentation.Pages
         {
             base.OnAppearing();
             await RequestInitialPermissionsAsync();
+            await LoadCollectionAsync();
+        }
+
+        private async Task LoadCollectionAsync()
+        {
+            if (_collectionId == 0 || _isCollectionLoaded)
+                return;
+
+            var collection = await _readWorkoutCollectionUseCase.ExecuteAsync(_collectionId);
+            if (collection is null)
+                return;
+
+            CollectionNameEntry.Text = collection.Name;
+            WorkMinutesEntry.Text = collection.WorkMinutes.ToString();
+            WorkSecondsEntry.Text = collection.WorkSeconds.ToString();
+            RestMinutesEntry.Text = collection.RestMinutes.ToString();
+            RestSecondsEntry.Text = collection.RestSeconds.ToString();
+            NumberOfSetsEntry.Text = collection.Sets.ToString();
+            _isCollectionLoaded = true;
         }
 
         private async Task RequestInitialPermissionsAsync()

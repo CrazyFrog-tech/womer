@@ -1,12 +1,16 @@
 ﻿using womer.Presentation.Pages;
+using womer.Core.Interfaces;
 
 namespace womer
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        private readonly INavigationService _navigationService;
+
+        public AppShell(INavigationService navigationService)
         {
             InitializeComponent();
+            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             Routing.RegisterRoute("SettingsPage", typeof(SettingsPage));
             Routing.RegisterRoute("TimerPage", typeof(TimerPage));
             Routing.RegisterRoute("EditCollectionPage", typeof(EditCollectionPage));
@@ -23,7 +27,7 @@ namespace womer
 
         private async void SettingsToolbarItem_Clicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("SettingsPage");
+            await _navigationService.GoToAsync("SettingsPage");
         }
     }
 }

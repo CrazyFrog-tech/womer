@@ -145,5 +145,25 @@ namespace womer.Infrastructure.Repository
                 _lock.Release();
             }
         }
+
+        public async Task UpdateOrderAsync(IEnumerable<WorkoutCollection> workoutCollections)
+        {
+            if (workoutCollections == null)
+                throw new ArgumentNullException(nameof(workoutCollections));
+
+            await _lock.WaitAsync();
+            try
+            {
+                PersistList(workoutCollections.ToList());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the workout collection order.", ex);
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
     }
 }

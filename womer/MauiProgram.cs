@@ -4,6 +4,7 @@ using womer.Application.UseCases.WorkoutCollectionUseCases;
 using womer.Core.Interfaces;
 using womer.Infrastructure.Audio;
 using womer.Infrastructure.Device;
+using womer.Infrastructure.Navigation;
 using womer.Infrastructure.Notifications;
 using womer.Infrastructure.Repository;
 using womer.Infrastructure.Services;
@@ -30,6 +31,7 @@ namespace womer
             builder.Services.AddSingleton<IAudioService, AudioService>();
             builder.Services.AddSingleton<ITimerNotificationService, TimerNotificationService>();
             builder.Services.AddSingleton<ITimerSoundService, TimerSoundService>();
+            builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
             builder.Services.AddSingleton<IWorkoutCollectionRepository, WorkoutCollectionRepository>();
 
             // Use cases
@@ -39,6 +41,7 @@ namespace womer
             builder.Services.AddTransient<GetAllWorkoutCollectionsUseCase>();
             builder.Services.AddTransient<ReadWorkoutCollectionUseCase>();
             builder.Services.AddTransient<SaveWorkoutCollectionUseCase>();
+            builder.Services.AddTransient<UpdateWorkoutCollectionOrderUseCase>();
             builder.Services.AddTransient<DeleteWorkoutCollectionUseCase>();
             builder.Services.AddTransient<LoadWorkoutPlanFromWorkoutCollectionUseCase>();
 

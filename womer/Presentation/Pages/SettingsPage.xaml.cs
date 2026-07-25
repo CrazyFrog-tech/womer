@@ -8,15 +8,19 @@ public partial class SettingsPage : ContentPage
     private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
     private readonly SetVolumeUseCase _setVolumeUseCase;
     private readonly GetInitialVolumeUseCase _getInitialVolumeUseCase;
+    private readonly INavigationService _navigationService;
     private bool _isInitializingVolume;
 
 
-
-    public SettingsPage(SetVolumeUseCase setVolumeUseCase, GetInitialVolumeUseCase getInitialVolumeUseCase)
+    public SettingsPage(
+        SetVolumeUseCase setVolumeUseCase,
+        GetInitialVolumeUseCase getInitialVolumeUseCase,
+        INavigationService navigationService)
     {
         InitializeComponent();
         _setVolumeUseCase = setVolumeUseCase ?? throw new ArgumentNullException(nameof(setVolumeUseCase));
         _getInitialVolumeUseCase = getInitialVolumeUseCase ?? throw new ArgumentNullException(nameof(getInitialVolumeUseCase));
+        _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
         double initialVolume = _getInitialVolumeUseCase.Execute();
 
@@ -49,6 +53,6 @@ public partial class SettingsPage : ContentPage
 
     private async void BackButton_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//MainPage");
+        await _navigationService.GoToAsync("//MainPage");
     }
 }

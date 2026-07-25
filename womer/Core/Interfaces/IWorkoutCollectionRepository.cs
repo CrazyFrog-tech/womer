@@ -15,6 +15,8 @@ namespace womer.Core.Interfaces
         Task<WorkoutCollection> SaveAsync(WorkoutCollection workoutCollection);
         // UpdateAsync
         Task<WorkoutCollection> UpdateAsync(WorkoutCollection workoutCollection);
+        // UpdateOrderAsync
+        Task UpdateOrderAsync(IEnumerable<WorkoutCollection> workoutCollections);
         // DeleteAsync
         Task DeleteByIdAsync(long id);
 

@@ -32,45 +32,104 @@
                 <DataTemplate>
                     <Border
                         Margin="0,0,0,12"
-                        Padding="16,14"
+                        Padding="16,12"
                         BackgroundColor="{StaticResource Primary}"
                         Stroke="{StaticResource Black}"
                         StrokeShape="RoundRectangle 20"
                         StrokeThickness="2">
 
-                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                        <Grid
+                            ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                            ColumnSpacing="10"
+                            VerticalOptions="Center">
+
+                            <VerticalStackLayout
+                                Grid.Column="0"
+                                Spacing="4"
+                                VerticalOptions="Center">
+                                <Button
+                                    Padding="0"
+                                    BackgroundColor="{StaticResource Black}"
+                                    Clicked="MoveCollectionUpButton_Clicked"
+                                    CommandParameter="{Binding Id}"
+                                    CornerRadius="6"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    HeightRequest="20"
+                                    Text="▲"
+                                    TextColor="{StaticResource Primary}"
+                                    WidthRequest="28" />
+
+                                <Button
+                                    Padding="0"
+                                    BackgroundColor="{StaticResource Black}"
+                                    Clicked="MoveCollectionDownButton_Clicked"
+                                    CommandParameter="{Binding Id}"
+                                    CornerRadius="6"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    HeightRequest="20"
+                                    Text="▼"
+                                    TextColor="{StaticResource Primary}"
+                                    WidthRequest="28" />
+                            </VerticalStackLayout>
 
                             <Label
-                                Grid.Column="0"
+                                Grid.Column="1"
+                                Margin="4,0,4,0"
                                 FontAttributes="Bold"
                                 FontSize="18"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="2"
                                 Text="{Binding Name}"
                                 TextColor="{StaticResource Black}"
+                                ToolTipProperties.Text="{Binding Name}"
                                 VerticalOptions="Center" />
 
                             <Button
-                                Grid.Column="1"
-                                Padding="14,10"
-                                BackgroundColor="{StaticResource Black}"
+                                Grid.Column="2"
+                                Padding="0"
+                                BackgroundColor="#34C759"
                                 Clicked="PlayCollectionButton_Clicked"
                                 CommandParameter="{Binding Id}"
-                                CornerRadius="14"
+                                CornerRadius="22"
                                 FontAttributes="Bold"
-                                FontSize="16"
+                                FontSize="18"
+                                HeightRequest="44"
                                 Text="▶"
-                                TextColor="{StaticResource Primary}" />
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                WidthRequest="44" />
 
                             <Button
-                                Grid.Column="2"
-                                Padding="14,10"
-                                BackgroundColor="{StaticResource Black}"
+                                Grid.Column="3"
+                                Padding="0"
+                                BackgroundColor="#007AFF"
                                 Clicked="EditCollectionButton_Clicked"
                                 CommandParameter="{Binding Id}"
-                                CornerRadius="14"
+                                CornerRadius="22"
                                 FontAttributes="Bold"
-                                FontSize="16"
-                                Text="✏"
-                                TextColor="{StaticResource Primary}" />
+                                FontSize="20"
+                                HeightRequest="44"
+                                Text="✎"
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                WidthRequest="44" />
+
+                            <Button
+                                Grid.Column="4"
+                                Padding="0"
+                                BackgroundColor="#FF3B30"
+                                Clicked="DeleteCollectionButton_Clicked"
+                                CommandParameter="{Binding Id}"
+                                CornerRadius="22"
+                                FontAttributes="Bold"
+                                FontSize="18"
+                                HeightRequest="44"
+                                Text="🗑"
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                WidthRequest="44" />
 
                         </Grid>
                     </Border>

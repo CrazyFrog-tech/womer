@@ -19,6 +19,14 @@
                 Text="WORK"
                 TextColor="Black" />
 
+            <Label
+                x:Name="CollectionNameLabel"
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalOptions="Center"
+                IsVisible="False"
+                TextColor="Black" />
+
             <Grid HeightRequest="260" WidthRequest="260">
                 <GraphicsView
                     x:Name="RingView"
