@@ -341,65 +341,100 @@ public partial class TimerPage : ContentPage
 
 	private async Task RunPreparationPhaseAsync(int durationSeconds, CancellationToken cancellationToken)
 	{
-		for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
-		{
-			await WaitWhilePausedAsync(cancellationToken);
-
-			cancellationToken.ThrowIfCancellationRequested();
-			double progress = durationSeconds == 0
-				? 0
-				: (double)secondsRemaining / durationSeconds;
-
-			UpdateTimerDisplay("READY", _prepBackgroundColor, 1, _totalSets, secondsRemaining, progress);
-
-			if (secondsRemaining > 0)
+		await RunCountdownRingAsync(
+			"READY",
+			_prepBackgroundColor,
+			currentSet: 1,
+			totalSets: _totalSets,
+			durationSeconds,
+			cancellationToken,
+			onSecondChanged: secondsRemaining =>
 			{
-				PlayTickCue();
-				await DelayOneSecondWithPauseAsync(cancellationToken);
-				continue;
-			}
+				if (secondsRemaining > 0)
+					PlayTickCue();
+			});
 
-			PlayStartingWhistleCue();
-		}
+		PlayStartingWhistleCue();
 	}
 
 	private async Task RunPhaseAsync(int currentSet, int totalSets, int durationSeconds, bool isWorkPhase, CancellationToken cancellationToken)
 	{
-		const double ringOffset = 0.95;
-        const int phaseSwitchPauseMs = 500;
-        for (int secondsRemaining = durationSeconds; secondsRemaining >= 0; secondsRemaining--)
+		const int phaseSwitchPauseMs = 500;
+		string phaseText = isWorkPhase ? "WORK" : "REST";
+		Color backgroundColor = isWorkPhase ? _workBackgroundColor : _restBackgroundColor;
+
+		await RunCountdownRingAsync(
+			phaseText,
+			backgroundColor,
+			currentSet,
+			totalSets,
+			durationSeconds,
+			cancellationToken,
+			onSecondChanged: secondsRemaining =>
+			{
+				if (secondsRemaining is > 0 and < 5)
+					PlayTickCue();
+			});
+
+		bool hasAnotherPhase = isWorkPhase
+			? currentSet < totalSets && _totalRestSeconds > 0
+			: currentSet < totalSets;
+
+		if (hasAnotherPhase)
 		{
-			await WaitWhilePausedAsync(cancellationToken);
-
-			cancellationToken.ThrowIfCancellationRequested();
-			double adjustedRemaining = secondsRemaining - ringOffset;
-
-            double progress = durationSeconds == 0
-                ? 0
-				: (double)adjustedRemaining / durationSeconds;
-
-			UpdateTimerDisplay(isWorkPhase ? "WORK" : "REST", isWorkPhase ? _workBackgroundColor : _restBackgroundColor, currentSet, totalSets, secondsRemaining, progress);
-
-            if (secondsRemaining is > 0 and < 5)
-                PlayTickCue();
-
-            if (secondsRemaining == 0)
-            {
-                bool hasAnotherPhase = isWorkPhase
-                       ? currentSet < totalSets && _totalRestSeconds > 0
-                       : currentSet < totalSets;
-
-                if (hasAnotherPhase)
-                {
-                    PlayPhaseSwitchCue();
-                    await Task.Delay(phaseSwitchPauseMs, cancellationToken);
-                }
-
-                break;
-            }
-
-            await DelayOneSecondWithPauseAsync(cancellationToken);
+			PlayPhaseSwitchCue();
+			await Task.Delay(phaseSwitchPauseMs, cancellationToken);
 		}
+	}
+
+	private async Task RunCountdownRingAsync(
+		string phaseText,
+		Color backgroundColor,
+		int currentSet,
+		int totalSets,
+		int durationSeconds,
+		CancellationToken cancellationToken,
+		Action<int>? onSecondChanged = null)
+	{
+		if (durationSeconds <= 0)
+		{
+			UpdateTimerDisplay(phaseText, backgroundColor, currentSet, totalSets, 0, 0);
+			return;
+		}
+
+		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+		int lastDisplayedSecond = -1;
+
+		while (true)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+
+			if (_isPaused)
+			{
+				stopwatch.Stop();
+				await WaitWhilePausedAsync(cancellationToken);
+				stopwatch.Start();
+			}
+
+			double remainingSeconds = Math.Max(0, durationSeconds - stopwatch.Elapsed.TotalSeconds);
+			double progress = remainingSeconds / durationSeconds;
+			int displaySeconds = remainingSeconds <= 0 ? 0 : (int)Math.Ceiling(remainingSeconds);
+
+			if (displaySeconds != lastDisplayedSecond)
+			{
+				lastDisplayedSecond = displaySeconds;
+				onSecondChanged?.Invoke(displaySeconds);
+			}
+
+			UpdateTimerDisplay(phaseText, backgroundColor, currentSet, totalSets, displaySeconds, progress);
+
+			if (remainingSeconds <= 0)
+				break;
+
+			await Task.Delay(16, cancellationToken);
+		}
+
+		UpdateTimerDisplay(phaseText, backgroundColor, currentSet, totalSets, 0, 0);
 	}
 
 	private async Task WaitWhilePausedAsync(CancellationToken cancellationToken)
@@ -408,19 +443,6 @@ public partial class TimerPage : ContentPage
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			await Task.Delay(120, cancellationToken);
-		}
-	}
-
-	private async Task DelayOneSecondWithPauseAsync(CancellationToken cancellationToken)
-	{
-		int remainingDelayMs = 1000;
-
-		while (remainingDelayMs > 0)
-		{
-			await WaitWhilePausedAsync(cancellationToken);
-			int sliceMs = Math.Min(100, remainingDelayMs);
-			await Task.Delay(sliceMs, cancellationToken);
-			remainingDelayMs -= sliceMs;
 		}
 	}
 	
@@ -611,38 +633,46 @@ public partial class TimerPage : ContentPage
 
 	private sealed record WorkoutSession(string? CollectionName, WorkoutPlan Plan);
 
-    private sealed class CountdownRingDrawable : IDrawable
+	private sealed class CountdownRingDrawable : IDrawable
 	{
-		private const float RingThickness = 18f;
+		private const float RingThickness = 28f;
 
 		public double RingProgress { get; set; } = 1;
 		public Color RingColor { get; set; } = Colors.Black;
 
-        public void Draw(ICanvas canvas, RectF dirtyRect)
-        {
-            float size = Math.Min(dirtyRect.Width, dirtyRect.Height) - RingThickness;
+		public void Draw(ICanvas canvas, RectF dirtyRect)
+		{
+			float size = Math.Min(dirtyRect.Width, dirtyRect.Height) - RingThickness;
 			if (size <= 0)
 				return;
 
-            float x = (dirtyRect.Width - size) / 2;
-            float y = (dirtyRect.Height - size) / 2;
+			float x = (dirtyRect.Width - size) / 2f;
+			float y = (dirtyRect.Height - size) / 2f;
 
-            canvas.StrokeSize = RingThickness;
-            canvas.StrokeLineCap = LineCap.Round;
+			canvas.StrokeSize = RingThickness;
+			canvas.StrokeLineCap = LineCap.Round;
 
-            canvas.StrokeColor = Color.FromRgba(0, 0, 0, 60);
-            canvas.DrawEllipse(x, y, size, size);
+			canvas.StrokeColor = Color.FromRgba(0, 0, 0, 60);
+			canvas.DrawEllipse(x, y, size, size);
 
-            double progress = Math.Clamp(RingProgress, 0, 1);
+			double progress = Math.Clamp(RingProgress, 0, 1);
 
 			if (progress <= 0)
 				return;
 
-            float startAngle = -90;
-            float endAngle = startAngle + (float)(360 * progress);
+			canvas.StrokeColor = RingColor;
 
-            canvas.StrokeColor = RingColor;
-            canvas.DrawArc(x, y, size, size, startAngle, endAngle, true, false);
-        }
-    }
+			// DrawArc with a full 360° sweep often fails to render on some platforms;
+			// draw a complete ellipse instead when the ring is essentially full.
+			if (progress >= 0.999)
+			{
+				canvas.DrawEllipse(x, y, size, size);
+				return;
+			}
+
+			float startAngle = -90f;
+			float endAngle = startAngle + (float)(360.0 * progress);
+			canvas.DrawArc(x, y, size, size, startAngle, endAngle, true, false);
+		}
+	}
 }
