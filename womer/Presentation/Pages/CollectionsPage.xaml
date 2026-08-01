@@ -3,7 +3,7 @@
     x:Class="womer.Presentation.Pages.CollectionsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Collections"
+    Title="Sessions"
     BackgroundColor="{StaticResource Primary}">
 
     <Grid
@@ -23,7 +23,7 @@
                     FontAttributes="Bold"
                     FontSize="18"
                     HorizontalOptions="Center"
-                    Text="No collections yet."
+                    Text="NO SESSIONS"
                     TextColor="{StaticResource Black}"
                     VerticalOptions="Center" />
             </CollectionView.EmptyView>
@@ -154,7 +154,7 @@
                 FontAttributes="Bold"
                 FontSize="20"
                 HorizontalOptions="Fill"
-                Text="Add New"
+                Text="+ NEW"
                 TextColor="{StaticResource Primary}" />
 
             <Button
@@ -166,7 +166,7 @@
                 FontAttributes="Bold"
                 FontSize="20"
                 HorizontalOptions="Fill"
-                Text="Play All"
+                Text="START ALL"
                 TextColor="{StaticResource Primary}" />
 
         </Grid>

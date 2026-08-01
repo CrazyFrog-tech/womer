@@ -3,6 +3,8 @@ using womer.Application.UseCases;
 using womer.Core.Interfaces;
 using womer.Core.Models;
 using womer.Application.UseCases.WorkoutCollectionUseCases;
+using OperationCanceledException = System.OperationCanceledException;
+
 
 
 #if ANDROID
@@ -176,7 +178,7 @@ public partial class TimerPage : ContentPage
 			await DisplayAlertAsync("Workout", PlayAll ? "All collections complete." : "Workout complete.", "OK");
 			await NavigateBackAsync();
 		}
-		catch (TaskCanceledException)
+        catch (OperationCanceledException)
 		{
 			_logger.LogInformation("Workout timer canceled.");
 		}

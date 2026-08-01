@@ -25,8 +25,8 @@
 		<ApplicationId>workout.timer.womer</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-		<ApplicationVersion>4</ApplicationVersion>
+		<ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
+		<ApplicationVersion>6</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
@@ -73,7 +73,7 @@
 	  <MauiXaml Update="NewPage1.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Presentation\Pages\CollectionsPage.xaml">
+	  <MauiXaml Update="Presentation\Pages\SessionsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Settings.xaml">
@@ -92,8 +92,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Presentation\Pages\EditCollectionPage.xaml.cs">
-	    <DependentUpon>EditCollectionPage.xaml</DependentUpon>
+	  <Compile Update="Presentation\Pages\SessionsPage.xaml.cs">
+	    <DependentUpon>SessionsPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Presentation\Pages\EditSessionPage.xaml.cs">
+	    <DependentUpon>EditSessionPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
