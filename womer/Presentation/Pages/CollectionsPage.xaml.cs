@@ -73,9 +73,9 @@ public partial class CollectionsPage : ContentPage
 		var collection = _collections[currentIndex];
 		_collections.RemoveAt(currentIndex);
 		_collections.Insert(newIndex, collection);
-		Collections.Move(currentIndex, newIndex);
+        await _updateWorkoutCollectionOrderUseCase.ExecuteAsync(_collections);
+        Collections.Move(currentIndex, newIndex);
 
-		await _updateWorkoutCollectionOrderUseCase.ExecuteAsync(_collections);
 	}
 
     private async void PlayCollectionButton_Clicked(object sender, EventArgs e)

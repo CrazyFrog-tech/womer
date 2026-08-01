@@ -275,7 +275,7 @@ public partial class TimerPage : ContentPage
 		if (PlayAll)
 		{
 			IEnumerable<WorkoutCollection> collections = await _getAllWorkoutCollectionsUseCase.ExecuteAsync();
-			foreach (WorkoutCollection collection in collections.OrderBy(collection => collection.Name, StringComparer.OrdinalIgnoreCase))
+			foreach (WorkoutCollection collection in collections)
 			{
 				WorkoutPlan collectionPlan = _loadWorkoutPlanFromCollectionUseCase.Execute(collection);
 				if (!collectionPlan.IsValid)
