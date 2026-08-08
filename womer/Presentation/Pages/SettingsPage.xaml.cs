@@ -5,7 +5,6 @@ namespace womer.Presentation.Pages;
 
 public partial class SettingsPage : ContentPage
 {
-    private const string BuyMeCoffeeUrl = "https://buymeacoffee.com/mohamadsolodev";
     private readonly SetVolumeUseCase _setVolumeUseCase;
     private readonly GetInitialVolumeUseCase _getInitialVolumeUseCase;
     private readonly INavigationService _navigationService;
@@ -44,11 +43,6 @@ public partial class SettingsPage : ContentPage
     private void UpdateVolumeLabel(double volume)
     {
         VolumeValueLabel.Text = $"Volume: {(int)(volume * 100)}%";
-    }
-
-    private async void BuyMeCoffeeButton_Clicked(object sender, EventArgs e)
-    {
-        await Browser.Default.OpenAsync(BuyMeCoffeeUrl, BrowserLaunchMode.SystemPreferred);
     }
 
     private async void BackButton_Clicked(object sender, EventArgs e)
