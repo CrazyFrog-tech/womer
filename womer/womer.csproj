@@ -25,8 +25,8 @@
 		<ApplicationId>workout.timer.womer</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.2.0</ApplicationDisplayVersion>
-		<ApplicationVersion>6</ApplicationVersion>
+		<ApplicationDisplayVersion>1.2.1</ApplicationDisplayVersion>
+		<ApplicationVersion>7</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
@@ -38,9 +38,17 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
-	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release' And '$(TargetFramework)'=='net10.0-android'">
+		<AndroidPackageFormat>aab</AndroidPackageFormat>
+
+			<!-- Enable R8 -->
+			<AndroidEnableCodeShrinking>true</AndroidEnableCodeShrinking>
+			<AndroidLinkTool>r8</AndroidLinkTool>
+
+			<!-- Keep .NET trimming enabled -->
+			<PublishTrimmed>true</PublishTrimmed>
+			<TrimMode>partial</TrimMode>
+		</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
